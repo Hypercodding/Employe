@@ -15,24 +15,13 @@ import { useNavigate } from 'react-router-dom';
 function Emp({ Emp, loadData }) {
   
 let navigate = useNavigate();
-const [tableKey, setTableKey] = useState(0);
-const [empState, setEmpState] = useState([]);
 
   const [visible, setVisible] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [formData, setFormData] = useState({});
 
   const refreshTable = async () => {
-    try {
-      // Replace 'fetchData' with your actual data fetching function
-      const newData = await fetch("http://localhost:3500/api/emp/fetchallemp"); 
-      setEmpState(newData);
-
-      // Update the key to trigger a re-render
-      setTableKey((prevKey) => prevKey + 1);
-    } catch (error) {
-      console.error('Error fetching data:', error.message);
-    }
+   navigate('/fetchUserData');
   };
 
   const onSubmit = async (data, form) => {
@@ -82,11 +71,11 @@ const [empState, setEmpState] = useState([]);
   const statusOptions = [
   
     { label: 'Active', value: 'active' },
-    { label: 'Inacive', value: 'Inactive' },
+    { label: 'Inactive', value: 'Inactive' },
     
   ];
 
-  const paginatorLeft = <Button type="button" icon="pi pi-refresh" text onClick={refreshTable}/>;
+  const paginatorLeft = <Button type="button" icon="pi pi-search" text onClick={refreshTable}/>;
   const paginatorRight = (
     <CSVLink data={Emp} filename="employee_data.csv">
       <Button type="button" icon="pi pi-download" />
@@ -119,9 +108,7 @@ const [empState, setEmpState] = useState([]);
 };
 
   const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
-    const getFormErrorMessage = (meta) => {
-        return isFormFieldValid(meta) && <small className="p-error">{meta.error}</small>;
-    };
+    
 
   const handleEdit = (rowData) => {
     setSelectedEmployee(rowData);
@@ -132,7 +119,7 @@ const [empState, setEmpState] = useState([]);
     <div className="employee-table">
       <DataTable
         value={Emp}
-        key={tableKey}
+        // key={tableKey}
         paginator
         rows={5}
         rowsPerPageOptions={[5, 10, 25, 50]}
@@ -143,13 +130,14 @@ const [empState, setEmpState] = useState([]);
         paginatorRight={paginatorRight}
       >
       <Column field="name" header="Name" />
+      <Column field="cmp.name" header="Company" />
       <Column field="dob" header="DOB" body={(rowData) => formatDate(rowData.dob)} />
       <Column field="gender" header="Gender" />
       <Column
         field="employee_status"
         header="Status"
         body={(rowData) => (
-          <span style={{ color: rowData.employee_status === 'Active' ? 'black' : 'red' }}>
+          <span style={{ color: rowData.employee_status === 'active' ? 'black' : 'red' }}>
             {rowData.employee_status}
           </span>
         )}

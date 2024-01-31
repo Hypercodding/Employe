@@ -4,15 +4,14 @@ import { Badge } from 'primereact/badge';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { Button } from 'primereact/button';
-import { Avatar } from 'primereact/avatar';
 
 import logoImage from './user.png';
 
 export default function Navbar() {
   const token = localStorage.getItem('token');
   const decoded = jwtDecode(token);
-  const username = decoded.user ? decoded.user.name : '';
-  const admin = decoded.user ? decoded.user.isAdmin : false;
+  const admin = decoded.user ? decoded.user.isAdmin : "Manager";
+  
 
   let navigate = useNavigate();
 
@@ -33,9 +32,32 @@ export default function Navbar() {
       to: '/employee',
     },
     {
+      label: 'Company',
+      icon: 'pi pi-building',
+      to: '/company',
+    },
+    {
+      label: 'Inventry',
+      icon: 'pi pi-box',
+      to: '/inventry',
+    },
+    {
       label: 'Register',
-      icon: 'pi pi-plus',
-      to: '/register',
+      icon: 'pi pi-bars',
+      items: [
+        {
+          label: 'Employee',
+          icon: 'pi pi-plus',
+          command: () => navigate('/register'),
+        },
+        {
+          label: 'Company',
+          icon: 'pi pi-plus',
+          command: () => navigate('/register_company'),
+        },
+
+      ],
+      
     },
   ];
 

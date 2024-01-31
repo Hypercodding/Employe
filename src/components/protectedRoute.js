@@ -11,6 +11,7 @@ export default ProtectedRoutes;
 
 // Function to check authentication status (replace it with your actual logic)
 const checkAuthentication = () => {
-  const token = localStorage.getItem('token'); // Retrieve the token from local storage
+  const token = localStorage.getItem('token');
+   // Retrieve the token from local storage
   return !!token; // Return true if the token exists, false otherwise
 };

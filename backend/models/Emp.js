@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
- 
+const Cmp = require('./Cmp');
 
 
 const EmpSchema = new Schema ({
-    // user  : {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'user'
-    // },
+    cmp  : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cmp'
+    },
     name: {
         type: String,
         required: true,
@@ -24,6 +24,7 @@ const EmpSchema = new Schema ({
     cnic: {
         type: String,
         required: true,
+        unique: true,
         },
     salary:{
         type: String,

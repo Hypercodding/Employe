@@ -4,10 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
-import { Password } from 'primereact/password';
-import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
-import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
 // import { CountryService } from '../services/CountryService';
 // import './FormDemo.css';
@@ -56,13 +53,13 @@ export const AddEmp = () => {
     const onSubmit = async(data, form) => {
         setFormData(data);
         setShowMessage(true);
-        const { name,salary, gender, phone_number,cnic, department, dob, date_of_hire, job_title } = data;
+        const { name,cmpName,salary, gender, phone_number,cnic, department, dob, date_of_hire, job_title } = data;
 
         try {
             var response = await fetch("http://localhost:3500/api/emp/addemp", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name,salary, gender, phone_number,cnic, department, dob, date_of_hire, job_title })
+                body: JSON.stringify({ name,cmpName,salary, gender, phone_number,cnic, department, dob, date_of_hire, job_title })
             });
 
             
@@ -120,16 +117,25 @@ export const AddEmp = () => {
             <div className="flex justify-content-center">
                 <div className="card ">
                     <h5 className="text-center">Register</h5>
-                    <Form onSubmit={onSubmit} initialValues={{ name: '',salary: '', department: '',phone_number: '', date_of_hire: null, employee_status: null,   cnic: '', job_title: '', date: null, gender: null}} validate={validate} render={({ handleSubmit }) => (
+                    <Form onSubmit={onSubmit} initialValues={{ name: '',  cmpName: '',salary: '', department: '',phone_number: '', date_of_hire: null, employee_status: null,   cnic: '', job_title: '', date: null, gender: null}} validate={validate} render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit} className="p-fluid">
                                     <div className="p-grid p-formgrid">
-            <div className="p-col">
+                              <div className="p-col">
 
                             <Field name="name" render={({ input, meta }) => (
                                 <div className="field">
                                     <span className="p-float-label">
                                         <InputText id="name" {...input} autoFocus className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
                                         <label htmlFor="name" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Name*</label>
+                                    </span>
+                                    {getFormErrorMessage(meta)}
+                                </div>
+                            )} />
+                            <Field name="cmpName" render={({ input, meta }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <InputText id="cmpName" {...input} autoFocus className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                        <label htmlFor="cmpName" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Company*</label>
                                     </span>
                                     {getFormErrorMessage(meta)}
                                 </div>

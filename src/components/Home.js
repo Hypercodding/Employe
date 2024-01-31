@@ -6,6 +6,7 @@ const Home = () => {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
 
+  
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
 
@@ -62,7 +63,7 @@ const Home = () => {
     fetchSalaryData();
   }, []);
 
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const decoded = jwtDecode(token);
   const username = decoded.user.name;
   const admin = decoded.user.isAdmin;
@@ -73,7 +74,7 @@ const Home = () => {
         <h1>
           Welcome {username}!
         </h1>
-        <p>{admin === true ? "You are an Admin" : null}</p>
+        <p>{admin === true ? "You are an Admin" : "Manger"}</p>
       </div>
       <div className="card flex justify-content-center">
         <Chart type="pie" data={chartData} options={chartOptions} className="w-full md:w-30rem" />

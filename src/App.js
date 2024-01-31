@@ -9,6 +9,10 @@ import Employee from './components/Employee';
 import { Signin } from './components/Signin';
 // import { AuthProvider } from './context/emp/authContext';
 import EmpStates from './context/emp/EmpStates';
+import {Register_company} from './components/Register_company';
+import Company from './components/Company';
+import Inventry from './components/Inventry';
+import FetchUserData from './components/FetchUserData';
 
 function App() {
   return (
@@ -26,7 +30,6 @@ function AppContent() {
             <header>
         {location.pathname !== '/' ? <Navbar /> : null}
       </header>
-      {/* {localStorage.getItem('token') ? <Navbar /> : null} */}
       <EmpStates>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -35,6 +38,10 @@ function AppContent() {
           <Route element={<Employee />} path="/employee" exact />
           <Route element={<Signin />} path="/signin" exact />
           <Route element={<Register />} path="/register" exact />
+          <Route element={<Company />} path="/company" exact />
+          <Route element={<Register_company />} path="/register_company" exact />
+          <Route element={<FetchUserData />} path="/fetchUserData" exact />
+          <Route element={<Inventry />} path="/inventry" exact />
         </Route>
       </Routes>
       </EmpStates>
