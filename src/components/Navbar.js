@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menubar } from 'primereact/menubar';
 import { Badge } from 'primereact/badge';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -9,9 +9,7 @@ import logoImage from './user.png';
 
 export default function Navbar() {
   const token = localStorage.getItem('token');
-  const decoded = jwtDecode(token);
-  const admin = decoded.user ? decoded.user.isAdmin : "Manager";
-  
+  const [isAdmin, setIsAdmin] = useState(false);
 
   let navigate = useNavigate();
 
@@ -19,6 +17,13 @@ export default function Navbar() {
     localStorage.removeItem('token');
     navigate('/');
   };
+
+  useEffect(() => {
+    if (token) {
+      const decoded = jwtDecode(token);
+      setIsAdmin(decoded.user ? decoded.user.isAdmin : false);
+    }
+  }, [token]);
 
   const items = [
     {
@@ -55,9 +60,7 @@ export default function Navbar() {
           icon: 'pi pi-plus',
           command: () => navigate('/register_company'),
         },
-
       ],
-      
     },
   ];
 
@@ -65,7 +68,7 @@ export default function Navbar() {
 
   const end = (
     <div className="flex align-items-center gap-2">
-      {admin && (
+      {isAdmin && (
         <NavLink to="/signin">
           <i className="pi pi-user-plus mx-3 " size="large" style={{ color: '#708090', fontSize: '1.5rem' }}></i>
         </NavLink>
@@ -77,12 +80,6 @@ export default function Navbar() {
         style={{ color: '#708090', fontSize: '1.1rem' }}
         onClick={Logout}
       />
-      {/* {username && (
-        <div className="flex justify-content-end align-items-center mt-2">
-          <Avatar label={username.charAt(0)} shape="circle" style={{ marginRight: '0.5rem' }} />
-          <span className="p-d-none p-d-sm-inline-block">{username}</span>
-        </div>
-      )} */}
     </div>
   );
 
@@ -104,11 +101,9 @@ export default function Navbar() {
             </NavLink>
           ),
         }))}
-        
         start={start}
         end={end}
       />
-      
     </div>
   );
 }

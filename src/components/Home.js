@@ -4,8 +4,11 @@ import { Chart } from 'primereact/chart';
 
 const Home = () => {
   const [chartData, setChartData] = useState({});
-  const [chartOptions, setChartOptions] = useState({});
+  const [username, setUsername] = useState('');
 
+  const [chartOptions, setChartOptions] = useState({});
+  const token = localStorage.getItem('token');
+  const [isAdmin, setIsAdmin] = useState(false);
   
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -63,10 +66,14 @@ const Home = () => {
     fetchSalaryData();
   }, []);
 
-  const token = sessionStorage.getItem('token');
-  const decoded = jwtDecode(token);
-  const username = decoded.user.name;
-  const admin = decoded.user.isAdmin;
+  useEffect(() => {
+    if (token) {
+      const decoded = jwtDecode(token);
+      setIsAdmin(decoded.user ? decoded.user.isAdmin : false);
+      setUsername(decoded.user ? decoded.user.name: '');
+    }
+  }, [token]);
+
 
   return (
     <>
@@ -74,7 +81,7 @@ const Home = () => {
         <h1>
           Welcome {username}!
         </h1>
-        <p>{admin === true ? "You are an Admin" : "Manger"}</p>
+        <p>{isAdmin  ? "You are an Admin" : "Manger"}</p>
       </div>
       <div className="card flex justify-content-center">
         <Chart type="pie" data={chartData} options={chartOptions} className="w-full md:w-30rem" />
