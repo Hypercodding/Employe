@@ -28,7 +28,7 @@ export default ProtectedRoute;
 
 const checkAuthentication = async () => {
   try {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     // Simulate an asynchronous check (e.g., validate token with a server)
     // Replace this with your actual async logic
     await new Promise(resolve => setTimeout(resolve, 1000));

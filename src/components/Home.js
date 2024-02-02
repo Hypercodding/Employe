@@ -7,7 +7,7 @@ const Home = () => {
   const [username, setUsername] = useState('');
 
   const [chartOptions, setChartOptions] = useState({});
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const [isAdmin, setIsAdmin] = useState(false);
   
   useEffect(() => {

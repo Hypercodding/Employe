@@ -11,7 +11,7 @@ import { jwtDecode } from "jwt-decode";
 
 
 export const Login = () => {
-    const token = localStorage.getItem('token');
+    // const token = sessionStorage.getItem('token');
     // let history = useHistory();
     let navigate = useNavigate();
     const [showMessage, setShowMessage] = useState(false);
@@ -53,7 +53,7 @@ export const Login = () => {
 
             // Reset the form
             form.restart();
-            localStorage.setItem('token', json.authData);
+            sessionStorage.setItem('token', json.authData);
             let decoded = jwtDecode(json.authData);
             let username = decoded.user;
             console.log('username', username);

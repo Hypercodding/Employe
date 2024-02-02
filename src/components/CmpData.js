@@ -6,7 +6,7 @@ import { CSVLink } from 'react-csv';
 import { useNavigate } from 'react-router-dom';
 
 function CmpData({ CmpData, loadData }) {
-  
+  const navigate = useNavigate();
 // let navigate = useNavigate();
 const [tableKey, setTableKey] = useState(0);
 const [cmpState, setCmpState] = useState([]);
@@ -16,20 +16,7 @@ const [cmpState, setCmpState] = useState([]);
   const [formData, setFormData] = useState({});
 
   const refreshTable = async () => {
-    try {
-      const response = await fetch("http://localhost:3500/api/cmp/getCmp");
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const newData = await response.json();
-      setCmpState(newData);
-  
-      // Update the key to trigger a re-render
-      setTableKey((prevKey) => prevKey + 1);
-    } catch (error) {
-      console.error('Error fetching data:', error.message);
-    }
+    navigate('/register_company');
   };
   
   
@@ -40,7 +27,7 @@ const [cmpState, setCmpState] = useState([]);
   };
 
 
-  const paginatorLeft = <Button type="button" icon="pi pi-refresh" text onClick={refreshTable}/>;
+  const paginatorLeft = <Button type="button" icon="pi pi-plus" text onClick={refreshTable}/>;
   const paginatorRight = (
     <CSVLink data={CmpData} filename="employee_data.csv">
       <Button type="button" icon="pi pi-download" />
@@ -50,8 +37,8 @@ const [cmpState, setCmpState] = useState([]);
   const renderActions = (rowData) => {
     return (
       <div>
-      <i class="pi pi-pencil mx-3" onClick={() => handleEdit(rowData)}></i>
-      <i class="pi pi-trash" onClick={() => handleDelete(rowData)}></i>
+      <i className="pi pi-pencil mx-3" onClick={() => handleEdit(rowData)}></i>
+      <i className="pi pi-trash" onClick={() => handleDelete(rowData)}></i>
 
       </div>
 

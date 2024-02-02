@@ -7,7 +7,6 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputMask } from 'primereact/inputmask';
 import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
 import { Form, Field } from 'react-final-form';
 import { classNames } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
@@ -75,7 +74,7 @@ let navigate = useNavigate();
     
   ];
 
-  const paginatorLeft = <Button type="button" icon="pi pi-search" text onClick={refreshTable}/>;
+  const paginatorLeft = <Button type="button" icon="pi pi-id-card" style={{ fontSize: '1rem' }} text onClick={refreshTable}/>;
   const paginatorRight = (
     <CSVLink data={Emp} filename="employee_data.csv">
       <Button type="button" icon="pi pi-download" />
@@ -85,8 +84,8 @@ let navigate = useNavigate();
   const renderActions = (rowData) => {
     return (
       <div>
-      <i class="pi pi-pencil mx-3" onClick={() => handleEdit(rowData)}></i>
-      <i class="pi pi-trash" onClick={() => handleDelete(rowData)}></i>
+      <i className="pi pi-pencil mx-3" onClick={() => handleEdit(rowData)}></i>
+      <i className="pi pi-trash" onClick={() => handleDelete(rowData)}></i>
 
       </div>
 
@@ -145,6 +144,8 @@ let navigate = useNavigate();
       <Column field="cnic" header="CNIC" />
       <Column field="phone_number" header="Number" />
       <Column field="salary" header="Salary" />
+      
+      <Column field="leave_balance" header="Leaves" />
       <Column body={renderActions} header="Actions" />
       </DataTable>
 
@@ -206,26 +207,8 @@ let navigate = useNavigate();
                 </span>
             </div>
         )} />
-        <Field
-        name="cnic"
-        render={({ input, meta }) => (
-          <div className="field">
-            <span className="p-float-label">
-              <InputMask
-                id="cnic"
-                {...input}
-                // autoFocus
-                // onBlur={onBlur}
-                className={classNames({ 'p-invalid': isFormFieldValid(meta) })}
-                mask="99999-9999999-9"
-              />
-              <label htmlFor="cnic" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
-                CNIC*
-              </label>
-            </span>
-          </div>
-        )}
-      />
+        
+        
       <Field
         name="phone_number"
         render={({ input, meta }) => (
@@ -246,27 +229,12 @@ let navigate = useNavigate();
           </div>
         )}
       />
-        <Field name="dob" render={({ input }) => (
-            <div className="field">
-                <span className="p-float-label">
-                    <Calendar id="dob" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
-                    <label htmlFor="dob">Date of Birth</label>
-                </span>
-            </div>
-        )} />
-        <Field name="date_of_hire" render={({ input }) => (
-            <div className="field">
-                <span className="p-float-label">
-                    <Calendar id="date_of_hire" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
-                    <label htmlFor="date_of_hire">Date of Hire</label>
-                </span>
-            </div>
-        )} />
-        <Field name="gender" render={({ input }) => (
+        
+        <Field name="leave_balance" render={({ input }) => (
         <div className="field">
             <span className="p-float-label">
-                <Dropdown id="gender" {...input} options={genderOptions} optionLabel="label" />
-                <label htmlFor="country">Gender</label>
+                <InputText id="leave_balance" {...input}  optionLabel="label" />
+                <label htmlFor="leave_balance">Leaves</label>
             </span>
         </div>
         )} />

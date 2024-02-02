@@ -8,13 +8,13 @@ import { Button } from 'primereact/button';
 import logoImage from './user.png';
 
 export default function Navbar() {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const [isAdmin, setIsAdmin] = useState(false);
 
   let navigate = useNavigate();
 
   const Logout = () => {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     navigate('/');
   };
 

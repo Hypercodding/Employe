@@ -13,6 +13,7 @@ import {Register_company} from './components/Register_company';
 import Company from './components/Company';
 import Inventry from './components/Inventry';
 import FetchUserData from './components/FetchUserData';
+import { Add_item } from './components/Add_item';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function AppContent() {
           <Route element={<Register_company />} path="/register_company" exact />
           <Route element={<FetchUserData />} path="/fetchUserData" exact />
           <Route element={<Inventry />} path="/inventry" exact />
+          <Route element={<Add_item />} path="/add_item" exact />
         </Route>
       </Routes>
       </EmpStates>

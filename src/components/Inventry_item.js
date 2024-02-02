@@ -13,7 +13,7 @@ import { Dialog } from 'primereact/dialog';
 
 function Inventry_item({ Items, loadData }) {
   const navigate = useNavigate();
-  const [tableKey, setTableKey] = useState(0);
+  const [tableKey] = useState(0);
   const [itemState, setItemState] = useState([]);
   const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
   
@@ -22,27 +22,14 @@ function Inventry_item({ Items, loadData }) {
   }, [Items]);
 
   const refreshTable = async () => {
-    try {
-      const response = await fetch("http://localhost:3500/api/items/getItems");
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const newData = await response.json();
-      setItemState(newData);
-
-      // Update the key to trigger a re-render
-      setTableKey((prevKey) => prevKey + 1);
-    } catch (error) {
-      console.error('Error fetching data:', error.message);
-    }
+      navigate('/add_item');
   };
 
   const renderActions = (rowData) => {
     return (
       <div>
-      <i class="pi pi-pencil mx-3" onClick={() => handleEdit(rowData)}></i>
-      {/* <i class="pi pi-trash" onClick={() => handleDelete(rowData)}></i> */}
+      <i className="pi pi-pencil mx-3" onClick={() => handleEdit(rowData)}></i>
+      {/* <i className="pi pi-trash" onClick={() => handleDelete(rowData)}></i> */}
 
       </div>
 
@@ -56,13 +43,13 @@ function Inventry_item({ Items, loadData }) {
     setSelectedItem(rowData);
     setVisible(true);
   };
-  const paginatorLeft = <Button type="button" icon="pi pi-refresh" text onClick={refreshTable} />;
+  const paginatorLeft = <Button type="button" icon="pi pi-plus" text onClick={refreshTable} />;
   const paginatorRight = (
     <CSVLink data={Items} filename="Inventry.csv">
       <Button type="button" icon="pi pi-download" />
     </CSVLink>
   );
-  const [formData, setFormData] = useState({});
+  const [setFormData] = useState({});
 
   const onSubmit = async (data, form) => {
     setFormData(data);
