@@ -75,7 +75,7 @@ export const Add_item = () => {
                     <h5 className="text-center">Register Company</h5>
                     <Form
                         onSubmit={onSubmit}
-                        initialValues={{ itemName: '', itemQuantity: '', cmpName: '', vendor: '' }}
+                        initialValues={{ itemName: '', itemQuantity: '', cmpName: '', vendor: '', amount: '' }}
                         validate={validate}
                         render={({ handleSubmit }) => (
                             <form onSubmit={handleSubmit} className="p-fluid">
@@ -105,16 +105,18 @@ export const Add_item = () => {
                                     </div>
 
                                     <div className="p-col">
-                                        <Field name="cmpName" render={({ input, meta }) => (
+                                        <Field name="amount" render={({ input, meta }) => (
                                             <div className="field">
                                                 <span className="p-float-label">
-                                                    <InputText id="cmpName" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                                                    <label htmlFor="cmpName" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Company*</label>
+                                                    <InputText id="amount" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                                    <label htmlFor="amount" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Price*</label>
                                                 </span>
                                                 {getFormErrorMessage(meta)}
                                             </div>
                                         )} />
                                     </div>
+
+                                   
 
                                     <div className="p-col">
                                         <Field name="vendor" render={({ input, meta }) => (

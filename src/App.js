@@ -14,6 +14,9 @@ import Company from './components/Company';
 import Inventry from './components/Inventry';
 import FetchUserData from './components/FetchUserData';
 import { Add_item } from './components/Add_item';
+import { SellProduct } from './components/SellProduct';
+
+import OutProduct  from './components/OutProduct';
 
 function App() {
   return (
@@ -44,6 +47,9 @@ function AppContent() {
           <Route element={<FetchUserData />} path="/fetchUserData" exact />
           <Route element={<Inventry />} path="/inventry" exact />
           <Route element={<Add_item />} path="/add_item" exact />
+          <Route element={<SellProduct />} path="/sellProduct" exact />
+          
+          <Route element={<OutProduct />} path="/outProduct" exact />
         </Route>
       </Routes>
       </EmpStates>

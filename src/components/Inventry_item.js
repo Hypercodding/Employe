@@ -98,8 +98,14 @@ function Inventry_item({ Items, loadData }) {
       >
         <Column field="itemName" header="Name" />
         <Column field="itemQuantity" header="Quantity" />
-        <Column field="cmp.name" header="Company" />
         <Column field="vendor" header="Vendor" />
+        <Column field="amount" header="Amount" />
+        <Column
+    field="totalAmount"
+    header="Total Amount"
+    body={(rowData) => rowData.amount * rowData.itemQuantity}
+    footer={<span style={{ fontWeight: 'bold' }}>{itemState.reduce((acc, item) => acc + item.amount * item.itemQuantity, 0)}</span>}
+/>        
         <Column body={renderActions} header="Actions" />
       </DataTable>
     

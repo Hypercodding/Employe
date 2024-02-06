@@ -47,6 +47,22 @@ export default function Navbar() {
       to: '/inventry',
     },
     {
+      label: 'Product',
+      icon: 'pi pi-bars',
+      items: [
+        {
+          label: 'Sell Product',
+          icon: 'pi pi-plus',
+          command: () => navigate('/sellProduct'),
+        },
+        {
+          label: 'List',
+          icon: 'pi pi-plus',
+          command: () => navigate('/outProduct'),
+        },
+      ],
+    },
+    {
       label: 'Register',
       icon: 'pi pi-bars',
       items: [

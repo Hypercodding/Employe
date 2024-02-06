@@ -18,6 +18,7 @@ app.use('/api/auth', require('./routes/auth'))
 app.use('/api/emp', require('./routes/emp'))
 app.use('/api/cmp', require('./routes/cmp'))//company
 app.use('/api/items', require('./routes/items'))//company
+app.use('/api/product', require('./routes/product'))//product
 
   
   app.listen(port, () => {

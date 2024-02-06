@@ -9,36 +9,40 @@ const fetchuser = require('../middleware/fetchuser');
 
 const JWT_secret = 'Usman';
 
-//Route1: Add employee
-router.post('/addItem', async (req, res)=>{
+router.post('/addItem', async (req, res) => {
     try {
-        //destructuring
-        const {itemName,itemQuantity,vendor, cmpName} = req.body;
-        
-        
-       
-        const cmp = await Cmp.findOne({ name: cmpName });
-        if (!cmp) {
-            return res.json({ success: false, message: 'Company not found' });
-          }
+        // Destructuring
+        const { itemName, itemQuantity, vendor, amount } = req.body;
 
-        const items = new Items({
-            itemName,itemQuantity,vendor, cmp: cmp._id
-        })
+        // Check if the item already exists
+        const item = await Items.findOne({ itemName: itemName.toLowerCase() });
+        if (item) {
+            return res.json({ success: false, message: 'Item already exists' });
+        }
 
-        savedItems = await items.save();
-        
-        res.json(savedItems)
+        // Create a new instance of Items model
+        const newItem = new Items({
+            itemName: itemName.toLowerCase(),
+            itemQuantity: itemQuantity,
+            vendor: vendor,
+            amount: amount
+        });
+
+        // Save the new item to the database
+        const savedItem = await newItem.save();
+
+        res.json(savedItem);
     } catch (error) {
         console.error(error.message);
-        res.status(500).send("some error occured!");
+        res.status(500).send("Some error occurred!");
     }
+});
 
-})
+
 
 //ROUTE 2: GET ITEMS
 router.get('/getItems', async(req, res)=>{
-    const item = await Items.find().populate('cmp', 'name');
+    const item = await Items.find();
     res.json(item)
 })
 

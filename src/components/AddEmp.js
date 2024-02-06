@@ -181,13 +181,13 @@ export const AddEmp = () => {
                             render={({ input, meta }) => (
                               <div className="field">
                                 <span className="p-float-label">
-                                  <InputMask
+                                  <InputText
                                     id="cnic"
                                     {...input}
                                     // autoFocus
                                     // onBlur={onBlur}
                                     className={classNames({ 'p-invalid': isFormFieldValid(meta) })}
-                                    mask="99999-9999999-9"
+                                    // mask="99999-9999999-9"
                                   />
                                   <label htmlFor="cnic" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
                                     CNIC*
@@ -202,13 +202,13 @@ export const AddEmp = () => {
                             render={({ input, meta }) => (
                               <div className="field">
                                 <span className="p-float-label">
-                                  <InputMask
+                                  <InputText
                                     id="phone_number"
                                     {...input}
                                     
                                     // onBlur={onBlur}
                                     className={classNames({ 'p-invalid': isFormFieldValid(meta) })}
-                                    mask="999-9999999"
+                                    // mask="999-9999999"
                                   />
                                   <label htmlFor="phone_number" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
                                     Number*
