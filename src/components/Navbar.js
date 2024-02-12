@@ -21,7 +21,7 @@ export default function Navbar() {
   useEffect(() => {
     if (token) {
       const decoded = jwtDecode(token);
-      setIsAdmin(decoded.user ? decoded.user.isAdmin : false);
+      setIsAdmin(decoded.user ? decoded.user.role === "Admin" : "Manager");
     }
   }, [token]);
 
@@ -34,7 +34,23 @@ export default function Navbar() {
     {
       label: 'Employee',
       icon: 'pi pi-user',
-      to: '/employee',
+      items: [
+        {
+          label: 'Employee Data',
+          icon: 'pi pi-database',
+          command: () => navigate('/employee'),
+        },
+        {
+          label: 'Leaves',
+          icon: 'pi pi-reply',
+          command: () => navigate('/Leaves'),
+        },
+        {
+          label: 'Loans',
+          icon: 'pi pi-wallet',
+          command: () => navigate('/Loan'),
+        },
+      ],
     },
     {
       label: 'Company',
@@ -42,42 +58,74 @@ export default function Navbar() {
       to: '/company',
     },
     {
-      label: 'Inventry',
+      label: 'Puchases',
       icon: 'pi pi-box',
-      to: '/inventry',
+      items: [
+        {
+          label: 'Purchase Item',
+          icon: 'pi pi-ticket',
+          command: () => navigate('/addPurchase'),
+        },
+        {
+          label: 'Prchase Table',
+          icon: 'pi pi-database',
+          command: () => navigate('/Purchase'),
+        },
+      ]
+    },
+    {
+      label: 'Salary',
+      icon: 'pi pi-money-bill',
+      items: [
+        {
+          label: 'Salary',
+          icon: 'pi pi-database',
+          command: () => navigate('/salary'),
+        },
+        {
+          label: 'Generate Salary',
+          icon: 'pi pi-ticket',
+          command: () => navigate('/generateSalary'),
+        },
+      ]
     },
     {
       label: 'Product',
-      icon: 'pi pi-bars',
+      icon: 'pi pi-shopping-bag',
       items: [
         {
           label: 'Sell Product',
-          icon: 'pi pi-plus',
+          icon: 'pi pi-shopping-cart',
           command: () => navigate('/sellProduct'),
         },
         {
           label: 'List',
-          icon: 'pi pi-plus',
+          icon: 'pi pi-list',
           command: () => navigate('/outProduct'),
         },
       ],
     },
     {
-      label: 'Register',
-      icon: 'pi pi-bars',
-      items: [
-        {
-          label: 'Employee',
-          icon: 'pi pi-plus',
-          command: () => navigate('/register'),
-        },
-        {
-          label: 'Company',
-          icon: 'pi pi-plus',
-          command: () => navigate('/register_company'),
-        },
-      ],
+      label: 'Bank Account',
+      icon: 'pi pi-home',
+      to: '/account',
     },
+    // {
+    //   label: 'Register',
+    //   icon: 'pi pi-bars',
+    //   items: [
+    //     {
+    //       label: 'Employee',
+    //       icon: 'pi pi-plus',
+    //       command: () => navigate('/register'),
+    //     },
+    //     {
+    //       label: 'Company',
+    //       icon: 'pi pi-plus',
+    //       command: () => navigate('/register_company'),
+    //     },
+    //   ],
+    // },
   ];
 
   const start = <img alt="logo" src={logoImage} height="40" className="mr-2"></img>;

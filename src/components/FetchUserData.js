@@ -27,23 +27,38 @@ const FetchUserData = () => {
       console.error('Network error:', error.message);
     }
   };
-
   const downloadPdf = async () => {
     try {
-      const response = await fetch('http://localhost:3500/api/emp/getEmpByCnicAsPdf', {
+      const salaryResponse = await fetch(`http://localhost:3500/api/salary/calculateSalary/${userData._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ cnic: userData.cnic }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      if (!salaryResponse.ok) {
+        throw new Error(`Salary calculation failed! Status: ${salaryResponse.status}`);
+      }
+
+      // Assuming the salary calculation API returns the salary details
+      const salaryData = await salaryResponse.json();
+      console.log('Salary calculated successfully:', salaryData);
+
+      // Now download the PDF
+      const pdfResponse = await fetch(`http://localhost:3500/api/salary/getEmpByEmployeeIdAsPdf/${userData._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(salaryData), // Pass the salary data to the PDF generation API
+      });
+
+      if (!pdfResponse.ok) {
+        throw new Error(`HTTP error! Status: ${pdfResponse.status}`);
       }
 
       // Convert the response to a blob and create a URL
-      const blob = await response.blob();
+      const blob = await pdfResponse.blob();
       const url = URL.createObjectURL(blob);
 
       // Create a link and trigger the download
@@ -54,10 +69,10 @@ const FetchUserData = () => {
       a.click();
       document.body.removeChild(a);
     } catch (error) {
-      console.error('Network error:', error.message);
+      console.error('Error during PDF download and salary calculation:', error.message);
     }
   };
-
+  
   return (
     <div>
       <div className="card flex justify-content-center text-center mt-2 ">
@@ -70,7 +85,7 @@ const FetchUserData = () => {
               <p><b>Gender: </b> {userData.gender}</p>
               <p><b>Company: </b> {userData.cmp.name}</p>
               <p><b>Salary: </b> {userData.leave_balance > 4 ? userData.salary - (userData.leave_balance * 10) : userData.salary}</p>
-              <p><b>Leaves: </b> {userData.leave_balance - 4}</p>
+              <p><b>Leaves: </b> {userData.leave_balance >4 ? userData.leave_balance - 4 : 0}</p>
               <p><b>Number: </b> {userData.phone_number}</p>
               <p><b>Job Title: </b> {userData.job_title}</p>
             </div>

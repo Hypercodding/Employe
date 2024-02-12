@@ -6,7 +6,7 @@ const Employee = () => {
   const [emp, setEmp] = useState([]);
 
   const loadData = () => {
-    fetch("http://localhost:3500/api/emp/fetchallemp") 
+    fetch("http://localhost:3500/api/employee/fetchallemp") 
     .then(resp => resp.json())
      .then(data => setEmp(data))
   }

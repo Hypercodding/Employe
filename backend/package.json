@@ -4,6 +4,7 @@
   "description": "project_emp",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -17,6 +18,7 @@
     "html-pdf": "^3.0.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.0",
+    "pdf-merger-js": "^5.1.1",
     "pdfkit": "^0.14.0",
     "react-final-form": "^6.5.9"
   },

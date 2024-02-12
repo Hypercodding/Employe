@@ -8,6 +8,8 @@ import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
+import { Dropdown } from 'primereact/dropdown';
+
 // import { CountryService } from '../services/CountryService';
 // import './FormDemo.css';
 
@@ -19,12 +21,12 @@ export const Signin = () => {
     const validate = (data) => {
         let errors = {};
 
-        if (!data.name) {
-            errors.name = 'Name is required.';
+        if (!data.firstName) {
+            errors.firstName = 'First Name is required.';
         }
 
-        if (!data.ph) {
-            errors.ph = 'ph is required.';
+        if (!data.phoneNumber) {
+            errors.phoneNumber = 'phoneNumber is required.';
         }
         
 
@@ -40,13 +42,13 @@ export const Signin = () => {
     const onSubmit = async (data, form) => {
         setFormData(data);
         setShowMessage(true);
-        const { ph, password, name, isAdmin } = data;
+        const { firstName, lastName,phoneNumber, password,role,companyName } = data;
 
         try {
             var response = await fetch("http://localhost:3500/api/auth/createUser", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ph, password, name,isAdmin })
+                body: JSON.stringify({ firstName, lastName,phoneNumber, password,role,companyName })
             });
 
             
@@ -94,7 +96,7 @@ export const Signin = () => {
                     <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
                     <h5>Registration Successful!</h5>
                     <p style={{ lineHeight: 1.5, textIndent: '1rem' }}>
-                        Your account is registered under name <b>{formData.name}</b> ; it'll be valid next 30 days without activation. Please check <b>{formData.ph}</b> for activation instructions.
+                        Your account is registered under name <b>{formData.name}</b> ; it'll be valid next 30 days without activation. Please check <b>{formData.phoneNumber}</b> for activation instructions.
                     </p>
                 </div>
             </Dialog>
@@ -102,23 +104,53 @@ export const Signin = () => {
             <div className="flex justify-content-center">
                 <div className="card">
                     <h4 className="text-center">USER REGISTRATION</h4>
-                    <Form onSubmit={onSubmit} initialValues={{ name: '', ph: '', password: '',isAdmin: false }} validate={validate} render={({ handleSubmit }) => (
+                    <Form onSubmit={onSubmit} initialValues={{ firstName: '', lastName: '', phoneNumberoneNumber: '', password: '',role: '' }} validate={validate} render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit} className="p-fluid">
-                            <Field name="name" render={({ input, meta }) => (
+                            <Field name="firstName" render={({ input, meta }) => (
                                 <div className="field">
                                     <span className="p-float-label">
-                                        <InputText id="name" {...input} autoFocus className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                                        <label htmlFor="name" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Name*</label>
+                                        <InputText id="firstName" {...input} autoFocus className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                        <label htmlFor="firstName" className={classNames({ 'p-error': isFormFieldValid(meta) })}>First Name*</label>
                                     </span>
                                     {getFormErrorMessage(meta)}
                                 </div>
                             )} />
-                            <Field name="ph" render={({ input, meta }) => (
+                            <Field name="lastName" render={({ input, meta }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <InputText id="lastName" {...input} autoFocus className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                        <label htmlFor="lastName" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Last Name*</label>
+                                    </span>
+                                    {getFormErrorMessage(meta)}
+                                </div>
+                            )} />
+                            <Field
+                                name="role"
+                                render={({ input, meta }) => (
+                                    <div className="field">
+                                        <span className="p-float-label">
+                                            <Dropdown
+                                                id="role"
+                                                {...input}
+                                                options={[
+                                                    { label: 'Admin', value: 'Admin' },
+                                                    { label: 'Manager', value: 'Manager' },
+                                                ]}
+                                            />
+                                            <label htmlFor="role" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
+                                                Role*
+                                            </label>
+                                        </span>
+                                        {getFormErrorMessage(meta)}
+                                    </div>
+                                )}
+                            />
+                            <Field name="phoneNumber" render={({ input, meta }) => (
                                 <div className="field">
                                     <span className="p-float-label p-input-icon-right">
                                         
-                                        <InputText id="ph" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                                        <label htmlFor="ph" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Phone Number*</label>
+                                        <InputText id="phoneNumber" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                        <label htmlFor="phoneNumber" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Phone Number*</label>
                                     </span>
                                     {getFormErrorMessage(meta)}
                                 </div>
@@ -132,14 +164,17 @@ export const Signin = () => {
                                     {getFormErrorMessage(meta)}
                                 </div>
                             )} />
-                            
-                           
-                            <Field name="isAdmin" type="checkbox" render={({ input, meta }) => (
-                                <div className="field-checkbox">
-                                    <Checkbox inputId="isAdmin" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                                    <label htmlFor="isAdmin" className={classNames({ 'p-error': isFormFieldValid(meta) })}>isAdmin</label>
+                           <Field name="companyName" render={({ input, meta }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <InputText id="companyName" {...input} autoFocus className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                        <label htmlFor="companyName" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Company Name*</label>
+                                    </span>
+                                    {getFormErrorMessage(meta)}
                                 </div>
                             )} />
+                           
+                         
 
                             <Button type="submit" label="Submit" className="mt-2" />
                         </form>

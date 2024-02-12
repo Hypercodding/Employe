@@ -16,7 +16,7 @@ const Home = () => {
     // Fetch salary data from the server
     const fetchSalaryData = async () => {
       try {
-        const response = await fetch('http://localhost:3500/api/emp/fetchallemp');
+        const response = await fetch('http://localhost:3500/api/employee/fetchallemp');
         if (!response.ok) {
           throw new Error('Failed to fetch salary data');
         }
@@ -69,8 +69,8 @@ const Home = () => {
   useEffect(() => {
     if (token) {
       const decoded = jwtDecode(token);
-      setIsAdmin(decoded.user ? decoded.user.isAdmin : false);
-      setUsername(decoded.user ? decoded.user.name: '');
+      setIsAdmin(decoded.user ? decoded.user.role === "Admin" : "Manager" );
+      setUsername(decoded.user ? decoded.user.firstName: '');
     }
   }, [token]);
 

@@ -6,7 +6,7 @@ const Company = () => {
   const [cmpData, setcmpData] = useState([]);
 
   const loadData = () => {
-    fetch("http://localhost:3500/api/cmp/getCmp") 
+    fetch("http://localhost:3500/api/company/getCmp") 
     .then(resp => resp.json())
      .then(data => setcmpData(data))
   }

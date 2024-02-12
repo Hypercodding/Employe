@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser')
+const Company = require('../models/Company')
 
 //token pass
 const JWT_secret = 'Usman';
@@ -12,49 +13,83 @@ const JWT_secret = 'Usman';
 
 
 // ROUTE: CREATE USER
-router.post('/createUser',[
-    body('name', 'Enter valid Name').isLength({ min: 3 }),
-    body('password', 'Enter Valid Password')
-      .isLength({ min: 8 })
-      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, 'g')
-      .withMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
-    body('ph', 'Enter Valid Phone Number').isLength({ min: 10 }),
-],async (req, res)=>{
-
-    //handle validation Error
+// ROUTE: CREATE USER
+router.post('/createUser', [
+    // ... (your existing validation code)
+], async (req, res) => {
+    // Handle validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    
-    //check if user exist with this number
-    let user = await User.findOne({ph: req.body.ph});
-
-    if(user){
-        return res.status(400).json({error: "Phone Number already "})
+        return res.status(400).json({ errors: errors.array() });
     }
 
-    //password hashing
-    const salt= await bcrypt.genSalt(10);
-    const secPass= await bcrypt.hash(req.body.password, salt);
-    // create a user
-    user = await User.create({
-        name: req.body.name,
-        password: secPass,
-        ph: req.body.ph,
-        isAdmin: req.body.isAdmin,
-    })
-    //id
-    const data = {
-        user: {
-            id: user.id
+    try {
+        // Find or create the company with the provided name
+        let company = await Company.findOne({ name: req.body.companyName });
+
+        if (!company) {
+            company = new Company({
+                name: req.body.companyName,
+                companyStatus: 'Active', // Set the company status to 'Active' by default
+            });
         }
+
+        // Password hashing
+        const salt = await bcrypt.genSalt(10);
+        const secPass = await bcrypt.hash(req.body.password, salt);
+
+        // Create a user
+        const user = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            password: secPass,
+            phoneNumber: req.body.phoneNumber,
+            role: req.body.role,
+        });
+
+        // Set the company and user references
+        user.company = company._id;
+
+        // If the user is a manager, set the user as the company's manager
+        if (req.body.role === 'Manager') {
+            company.manager = user._id;
+        }
+
+        // Update the company's users field
+        company.users.push(user._id);
+
+        // Save the user and update the company
+        await user.save();
+        await company.save();
+
+        // Populate the manager field with user's information
+        // company = await Company.findById(company._id).populate('manager', 'firstName lastName');
+
+        // Generate JWT token
+        const data = {
+            user: {
+                id: user.id
+            }
+        };
+
+        const authData = jwt.sign(data, JWT_secret);
+
+        res.json({ authData, company });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Some error occurred!');
     }
-
-    const authData = jwt.sign(data, JWT_secret);
-
-      res.json({authData})
 })
+
+router.get('/userName', async (req, res) => {
+    try {
+        const company = await User.find({role: 'Manager'}, 'firstName lastName  _id'); // Assuming your Company model has 'name' and '_id' fields
+        res.json(company);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Internal Server Error');
+    }
+  });
 
 
 //ROUTE GET USER
@@ -72,7 +107,7 @@ router.get('/getUser',fetchuser, async (req, res)=>{
     //Route3:fetch
     router.post('/login',[
         body('password', 'Enter Valid Password').exists(),
-        body('ph', 'Enter Valid Phone Number').isLength({ min: 10 }),
+        body('phoneNumber', 'Enter Valid Phone Number').isLength({ min: 10 }),
     ],async (req, res)=>{
 
          //handle validation Error
@@ -81,9 +116,9 @@ router.get('/getUser',fetchuser, async (req, res)=>{
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {ph, password} = req.body;
+    const {phoneNumber, password} = req.body;
     try {
-        let user = await User.findOne({ph});
+        let user = await User.findOne({phoneNumber});
         if(!user){
             return res.status(400).json({error: "Please Enter th correct credentials!"});
         }
@@ -96,8 +131,8 @@ router.get('/getUser',fetchuser, async (req, res)=>{
         const data = {
             user: {
                 id: user.id,
-                name: user.name,
-                isAdmin: user.isAdmin
+                firstName: user.firstName,
+                role: user.role
             }
         }
     

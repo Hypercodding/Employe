@@ -1,16 +1,34 @@
-import React, {  useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { classNames } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
+import { Dropdown } from 'primereact/dropdown';
         
+
 export const Register_company = () => {
     let navigate = useNavigate();
     const [showMessage, setShowMessage] = useState(false);
     const [formData, setFormData] = useState({});
-
+    const [company, setCompany] = useState([]);
+    useEffect(() => {
+        // Fetch the list of companies when the component mounts
+        const fetchCompany = async () => {
+          try {
+            const response = await fetch('http://localhost:3500/api/auth/userName');
+            if (response.ok) {
+              const json = await response.json();
+              setCompany(json);
+            }
+          } catch (error) {
+            console.error('Error fetching Employee:', error.message);
+          }
+        };
+    
+        fetchCompany();
+      }, []);
 
 
     const validate = (data) => {
@@ -29,14 +47,13 @@ export const Register_company = () => {
         // event.preventDefault(); // Add this line to prevent the default form submission behavior
     
         setFormData(data);
-        setShowMessage(true);
-        const { name, owner } = data;
+        const { name, companyStatus, managerId} = data;
     
         try {
-            var response = await fetch("http://localhost:3500/api/cmp/addCmp", {
+            var response = await fetch("http://localhost:3500/api/company/create", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, owner })
+                body: JSON.stringify({ name, companyStatus, managerId })
             });
             console.log('Backend response:', response);
     
@@ -64,7 +81,10 @@ export const Register_company = () => {
 
     const dialogFooter = <div className="flex justify-content-center"><Button label="OK" className="p-button-text" autoFocus onClick={() => setShowMessage(false) } /></div>;
   
-    
+    const statusOption = [
+        { label: 'Active', value: 'Active' },
+        { label: 'InActive', value: 'InActive' },
+    ]
     return (
         <div className="form-demo">
             <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
@@ -80,10 +100,38 @@ export const Register_company = () => {
             <div className="flex justify-content-center">
                 <div className="card ">
                     <h5 className="text-center">Register Company</h5>
-                    <Form onSubmit={onSubmit} initialValues={{ name: '', owner: ''}} validate={validate} render={({ handleSubmit }) => (
+                    <Form onSubmit={onSubmit} initialValues={{ name: '', companyStatus: '', managerId: ''}} validate={validate} render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit} className="p-fluid">
                                     <div className="p-grid p-formgrid">
             <div className="p-col">
+                        <Field
+                            name="managerId"
+                            render={({ input, meta }) => (
+                                <div className="field">
+                                <span className="p-float-label">
+                                    <Dropdown id="manager" {...input} options={company} optionLabel={(option) => `${option.firstName}  ${option.lastName}`} optionValue="_id" />
+                                    <label htmlFor="manager">
+                                    Manager*
+                                    </label>
+                                </span>
+                                {/* {getFormErrorMessage(meta)} */}
+                                </div>
+                            )}
+                        />
+                        <Field
+                            name="companyStatus"
+                            render={({ input, meta }) => (
+                                <div className="field">
+                                <span className="p-float-label">
+                                    <Dropdown id="companyStatus" {...input} options={statusOption} optionLabel="label" />
+                                    <label htmlFor="companyStatus">
+                                    Status*
+                                    </label>
+                                </span>
+                                {/* {getFormErrorMessage(meta)} */}
+                                </div>
+                            )}
+                        />
 
                             <Field name="name" render={({ input, meta }) => (
                                 <div className="field">
@@ -96,15 +144,7 @@ export const Register_company = () => {
                             )} />
                             </div>
                             
-                            <Field name="owner" render={({ input, meta }) => (
-                                <div className="field">
-                                    <span className="p-float-label">
-                                        <InputText id="owner" {...input}  className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                                        <label htmlFor="owner" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Owner*</label>
-                                    </span>
-                                    {getFormErrorMessage(meta)}
-                                </div>
-                            )} />
+                            
                             </div>
                            
                             <Button type="submit" label="Submit" className="mt-2" />

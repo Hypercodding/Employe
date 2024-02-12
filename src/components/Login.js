@@ -17,8 +17,8 @@ export const Login = () => {
     const validate = (data) => {
         let errors = {};
 
-        if (!data.ph) {
-            errors.ph = 'Number is required.';
+        if (!data.phoneNumber) {
+            errors.phoneNumber = 'Number is required.';
         }
 
         if (!data.password) {
@@ -31,13 +31,13 @@ export const Login = () => {
     const onSubmit = async (data, form) => {
         setFormData(data);
 
-        const { ph, password } = data;
+        const { phoneNumber, password } = data;
 
         try {
             var response = await fetch('http://localhost:3500/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ph, password }),
+                body: JSON.stringify({ phoneNumber, password }),
             });
         } catch (error) {
             console.error('Network error:', error.message);
@@ -90,12 +90,12 @@ export const Login = () => {
                     <h5 className="text-center">LogIn</h5>
                     <Form
                         onSubmit={onSubmit}
-                        initialValues={{ ph: '', password: '' }}
+                        initialValues={{ phoneNumber: '', password: '' }}
                         validate={validate}
                         render={({ handleSubmit }) => (
                             <form onSubmit={handleSubmit} className="p-fluid">
                                 <Field
-                                    name="ph"
+                                    name="phoneNumber"
                                     render={({ input, meta }) => (
                                         <div className="field">
                                             <span className="p-float-label">

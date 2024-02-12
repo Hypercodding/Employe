@@ -22,17 +22,19 @@ let navigate = useNavigate();
   const refreshTable = async () => {
    navigate('/fetchUserData');
   };
-
+  const divert = async () => {
+    navigate('/register');
+   };
   const onSubmit = async (data, form) => {
     setFormData(data);
   
-    const { _id, name, salary, gender, phone_number,employee_status, cnic, department, dob, date_of_hire, job_title } = data;
+    const { _id, name, salary, gender, phoneNumber,employeeStatus, cnic, department, dateOfBirth, dateOfHiring, designation } = data;
   
     try {
-      var response = await fetch(`http://localhost:3500/api/emp/updateemp/${_id}`, {
+      var response = await fetch(`http://localhost:3500/api/employee/updateemp/${_id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, salary, gender, phone_number,employee_status, cnic, department, dob, date_of_hire, job_title })
+        body: JSON.stringify({ name, salary, gender, phoneNumber,employeeStatus, cnic, department, dateOfBirth, dateOfHiring, designation })
       });
   
     } catch (error) {
@@ -69,12 +71,13 @@ let navigate = useNavigate();
 
   const statusOptions = [
   
-    { label: 'Active', value: 'active' },
-    { label: 'Inactive', value: 'Inactive' },
+    { label: 'Active', value: 'Active' },
+    { label: 'Inactive', value: 'InActive' },
     
   ];
 
-  const paginatorLeft = <Button type="button" icon="pi pi-id-card" style={{ fontSize: '1rem' }} text onClick={refreshTable}/>;
+  const paginatorLeft = <div> <Button type="button" icon="pi pi-plus" style={{ fontSize: '1rem' }} text onClick={divert}/></div>;
+
   const paginatorRight = (
     <CSVLink data={Emp} filename="employee_data.csv">
       <Button type="button" icon="pi pi-download" />
@@ -96,9 +99,9 @@ let navigate = useNavigate();
   const handleDelete = async(data, form)=>{
     setFormData(data);
   
-    const { _id, name, salary, gender, phone_number,employee_status, cnic, department, dob, date_of_hire, job_title } = data;
+    const { _id} = data;
   
-    var response =await fetch(`http://localhost:3500/api/emp/deleteemp/${_id}`, {
+    var response =await fetch(`http://localhost:3500/api/employee/deleteemp/${_id}`, {
       method: 'DELETE',
 
       
@@ -129,23 +132,23 @@ let navigate = useNavigate();
         paginatorRight={paginatorRight}
       >
       <Column field="name" header="Name" />
-      <Column field="cmp.name" header="Company" />
-      <Column field="dob" header="DOB" body={(rowData) => formatDate(rowData.dob)} />
+      <Column field="company.name" header="Company" />
+      <Column field="dateOfBirth" header="dateOfBirth" body={(rowData) => formatDate(rowData.dateOfBirth)} />
       <Column field="gender" header="Gender" />
       <Column
-        field="employee_status"
+        field="employeeStatus"
         header="Status"
         body={(rowData) => (
-          <span style={{ color: rowData.employee_status === 'active' ? 'black' : 'red' }}>
-            {rowData.employee_status}
+          <span style={{ color: rowData.employeeStatus === 'Active' ? 'black' : 'red' }}>
+            {rowData.employeeStatus}
           </span>
         )}
       />
       <Column field="cnic" header="CNIC" />
-      <Column field="phone_number" header="Number" />
+      <Column field="phoneNumber" header="Number" />
       <Column field="salary" header="Salary" />
       
-      <Column field="leave_balance" header="Leaves" />
+
       <Column body={renderActions} header="Actions" />
       </DataTable>
 
@@ -182,62 +185,46 @@ let navigate = useNavigate();
         )} />
         </div>
         <div className="p-col">
-            <Field name="job_title" render={({ input, meta }) => (
+            <Field name="designation" render={({ input, meta }) => (
             <div className="field">
                 <span className="p-float-label">
-                    <InputText id="job_title" {...input}  className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                    <label htmlFor="job_title" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Job Title*</label>
+                    <InputText id="designation" {...input}  className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                    <label htmlFor="designation" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Job Title*</label>
                 </span>
             </div>
         )} />
         </div>
-        <Field name="department" render={({ input, meta }) => (
+       
+        <Field name="employeeStatus" render={({ input }) => (
             <div className="field">
                 <span className="p-float-label">
-                    <InputText id="department" {...input}  className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                    <label htmlFor="department" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Department*</label>
-                </span>
-            </div>
-        )} />
-        <Field name="employee_status" render={({ input }) => (
-            <div className="field">
-                <span className="p-float-label">
-                    <Dropdown id="employee_status" {...input}  options={statusOptions} optionLabel="label" />
-                    <label htmlFor="employee_status">Status</label>
+                    <Dropdown id="employeeStatus" {...input}  options={statusOptions} optionLabel="label" />
+                    <label htmlFor="employeeStatus">Status</label>
                 </span>
             </div>
         )} />
         
         
       <Field
-        name="phone_number"
+        name="phoneNumber"
         render={({ input, meta }) => (
           <div className="field">
             <span className="p-float-label">
               <InputMask
-                id="phone_number"
+                id="phoneNumber"
                 {...input}
                 
                 // onBlur={onBlur}
                 className={classNames({ 'p-invalid': isFormFieldValid(meta) })}
                 mask="999-9999999"
               />
-              <label htmlFor="phone_number" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
+              <label htmlFor="phoneNumber" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
                 Number*
               </label>
             </span>
           </div>
         )}
       />
-        
-        <Field name="leave_balance" render={({ input }) => (
-        <div className="field">
-            <span className="p-float-label">
-                <InputText id="leave_balance" {...input}  optionLabel="label" />
-                <label htmlFor="leave_balance">Leaves</label>
-            </span>
-        </div>
-        )} />
         </div>
                   {/* Add other form fields for editing */}
 
