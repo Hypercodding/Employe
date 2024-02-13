@@ -8,13 +8,14 @@ import { Login } from './components/Login';
 import Employee from './components/Employee';
 import { Signin } from './components/Signin';
 // import { AuthProvider } from './context/emp/authContext';
-import EmpStates from './context/emp/EmpStates';
+// import EmpStates from './context/emp/EmpStates';
 import {Register_company} from './components/Register_company';
 import Company from './components/Company';
 import Inventry from './components/Inventry';
 import FetchUserData from './components/FetchUserData';
 import { Add_item } from './components/Add_item';
 import { SellProduct } from './components/SellProduct';
+import { AuthProvider, useAuth } from './context/authContext'; // Import useAuth and AuthProvider
 
 import OutProduct  from './components/OutProduct';
 import Salary  from './components/Salary';
@@ -31,20 +32,26 @@ import Register from './components/Register';
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+ <AuthProvider> {/* Wrap your App with AuthProvider */}
+        <AppContent />
+      </AuthProvider>
+          </BrowserRouter>
   );
 }
-
 function AppContent() {
   const location = useLocation();
+  const { isLoggedIn } = useAuth(); // Assuming you have a useAuth hook from your authentication context
 
+  if (!isLoggedIn && location.pathname === '/') {
+    // If not authenticated and on the root path, redirect to the login page
+    return <Login />;
+  }
   return (
     <>
             <header>
         {location.pathname !== '/' ? <Navbar /> : null}
       </header>
-      <EmpStates>
+     
       <Routes>
         <Route path="/" element={<Login />} />
         <Route element={<ProtectedRoute />}>
@@ -69,7 +76,6 @@ function AppContent() {
           <Route element={<PurchaseTable/>} path="/Purchase" exact />
         </Route>
       </Routes>
-      </EmpStates>
     </>
   );
 }
