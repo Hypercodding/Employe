@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
 
-const mongoURI = "mongodb://localhost:27017/Project"
+// Replace 'your_atlas_connection_string' with the actual connection string from MongoDB Atlas
+const atlasConnectionString = 'mongodb+srv://mohammadhammad302:Mughal2050@cluster0.qrjimb8.mongodb.net/EMS?retryWrites=true&w=majority';
+const mongoURI = atlasConnectionString;
 
 async function connectToMongo() {
     try {
-      await mongoose.connect(mongoURI);
-      console.log('Connected to MongoDB');
+        await mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        console.log('Connected to MongoDB Atlas');
     } catch (error) {
-      console.error('Error connecting to MongoDB:', error.message);
+        console.error('Error connecting to MongoDB Atlas:', error.message);
     }
-  }
-  
-  module.exports = connectToMongo;
-  
+}
+
+module.exports = connectToMongo;
