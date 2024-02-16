@@ -7,6 +7,8 @@ import { Calendar } from 'primereact/calendar';
 import { Dialog } from 'primereact/dialog';
 import { classNames } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
+import { Checkbox } from 'primereact/checkbox';
+
 
 const AddEmp = () => {
     let navigate = useNavigate();
@@ -61,13 +63,13 @@ const AddEmp = () => {
         setShowMessage(true);
         console.log('Request Body:', data);
 
-        const { name, cmpId, dateOfBirth, gender, salary, cnic, designation, dateOfHiring, employeeStatus, phoneNumber } = data;
+        const { name, cmpId,overTime, dateOfBirth, gender, salary, cnic, designation, dateOfHiring, employeeStatus, phoneNumber } = data;
 
         try {
             var response = await fetch("http://localhost:3500/api/employee/addemployee", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, cmpId, dateOfBirth, gender, salary, cnic, designation, dateOfHiring, employeeStatus, phoneNumber })
+                body: JSON.stringify({ name, cmpId,overTime, dateOfBirth, gender, salary, cnic, designation, dateOfHiring, employeeStatus, phoneNumber })
             });
         } catch (error) {
             console.error('Network error:', error.message);
@@ -108,11 +110,11 @@ const AddEmp = () => {
 
     return (
         
-        <div className="border-round surface-200 font-bold p-2 w-30rem">
+        <div className="border-round surface-200 font-bold p-2 w-25rem">
             
             <div className="p-col-12">
                 
-                <Form onSubmit={onSubmit} initialValues={{ name: '', cmpId: '', salary: '', phoneNumber: '', dateOfHiring: null, dateOfBirth: null, employeeStatus: null, cnic: '', designation: '', date: null, gender: null }} validate={validate} render={({ handleSubmit }) => (
+                <Form onSubmit={onSubmit} initialValues={{ name: '', cmpId: '',overTime: false, salary: '', phoneNumber: '', dateOfHiring: null, dateOfBirth: null, employeeStatus: null, cnic: '', designation: '', date: null, gender: null }} validate={validate} render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit} className="p-fluid">
                         <div className="p-formgrid p-grid">
                             <div className="p-field p-col-12 p-md-6">
@@ -236,10 +238,28 @@ const AddEmp = () => {
                                     <div className="field">
                                         <span className="p-float-label">
                                             <Dropdown id="gender" {...input} options={genderOptions} optionLabel="label" />
-                                            <label htmlFor="country">Gender</label>
+                                            <label htmlFor="gender">Gender</label>
                                         </span>
                                     </div>
                                 )} />
+                                <Field
+    name="overTime"
+    render={({ input }) => (
+        <div className="field">
+            <span className="p-float-label">
+                <Checkbox
+                    inputId="overTime"
+                    {...input}
+                    checked={input.value || false} // Ensure a default value of false
+                    onChange={(e) => input.onChange(e.checked)}
+                />
+                <label htmlFor="overTime" className="ml-3">Overtime Applied</label>
+            </span>
+        </div>
+    )}
+/>
+
+
                             </div>
                         </div>
                         <Button type="submit" label="Submit" className="mt-2" />

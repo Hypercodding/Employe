@@ -5,13 +5,25 @@ const Leave = require('../models/Leave');
 // Create leave
 router.post('/', async (req, res) => {
   try {
-    const { employeeId, days, month, isDeducted } = req.body;
+    const { employeeId, startDate, endDate, isDeducted } = req.body;
+
+    // Convert startDate and endDate to Date objects
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    // Calculate the difference in milliseconds between startDate and endDate
+    const daysDifference = endDateObj.getTime() - startDateObj.getTime();
+
+    // Convert milliseconds to days and round to the nearest whole number
+    const days = Math.round((daysDifference / (1000 * 60 * 60 * 24))+1);
 
     const newLeave = new Leave({
       employeeId,
+      startDate,
+      endDate,
       days,
-      month,
-      year: new Date().getFullYear(),
+      month: startDateObj.getMonth() + 1,  // Adding 1 since getMonth() returns 0-based index
+      year: startDateObj.getFullYear(),
       isDeducted,
     });
 
@@ -23,6 +35,8 @@ router.post('/', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
 
 // Get all leaves with employee names using $lookup
 router.get('/leaves', async (req, res) => {
@@ -42,6 +56,8 @@ router.get('/leaves', async (req, res) => {
       {
         $project: {
           _id: 1,
+          startDate: 1,
+          endDate: 1,
           days: 1,
           month: 1,
           isDeducted: 1,

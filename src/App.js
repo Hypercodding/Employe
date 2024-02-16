@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+// App.js
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -31,11 +32,11 @@ import Register from './components/Register';
 
 function App() {
   return (
-    <BrowserRouter>
- <AuthProvider> {/* Wrap your App with AuthProvider */}
-        <AppContent />
-      </AuthProvider>
-          </BrowserRouter>
+    <Router>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  </Router>
   );
 }
 function AppContent() {

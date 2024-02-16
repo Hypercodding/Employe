@@ -49,6 +49,11 @@ const EmployeeSchema = new Schema({
     required: true 
   },
   position: String,
+  overTime: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
   createdAt: {
     type: Date,
     default: Date.now  // Set the default value to the current date and time   

@@ -132,7 +132,9 @@ function LeavesData({ LeavesData, loadData }) {
         >
           <Column field="employeeName" header="Name" />
           <Column field="employeeCnic" header="Cnic" />
-          <Column field="days" header="Leaves Days" />
+          <Column field="startDate" header="Start Date"  body={(rowData) => formatDate(rowData.startDate)} />
+          <Column field="endDate" header="End Date"  body={(rowData) => formatDate(rowData.endDate)}/>
+          <Column field="days" header="Total Days" />
           <Column
             field="month"
             header="Month"

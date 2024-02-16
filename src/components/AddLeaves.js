@@ -5,6 +5,8 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { useNavigate } from 'react-router-dom';
+import { Calendar } from 'primereact/calendar';
+
 
 const AddLeave = ({employees, onSubmit, loadData }) => {
   const [visible, setVisible] = useState(false);
@@ -70,13 +72,13 @@ const AddLeave = ({employees, onSubmit, loadData }) => {
     setFormData(data);
     console.log('Request Body:', data);
 
-    const { employeeId, days, month, isDeducted } = data;
+    const {  employeeId, startDate, endDate, isDeducted } = data;
 
     try {
       var response = await fetch("http://localhost:3500/api/leave/", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ employeeId, days, month, isDeducted })
+        body: JSON.stringify({ employeeId, startDate, endDate, isDeducted })
 
       });
 
@@ -125,23 +127,23 @@ const AddLeave = ({employees, onSubmit, loadData }) => {
     </div>
   )}
 />
-              <Field name="days" render={({ input, meta }) => (
-                <div className="field">
-                  <span className="p-float-label">
-                    <InputNumber id="days" value={parseInt(input.value)} onValueChange={(e) => input.onChange(e.value)} autoFocus />
-                    <label htmlFor="days" >days*</label>
-                  </span>
-                </div>
-              )} />
+<Field name="startDate" render={({ input }) => (
+  <div className="field">
+      <span className="p-float-label">
+          <Calendar id="startDate" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
+          <label htmlFor="startDate">Start Date</label>
+      </span>
+  </div>
+)} />
 
-<Field name="month" render={({ input, meta }) => (
-                <div className="field">
-                  <span className="p-float-label">
-                    <InputNumber id="month" value={parseInt(input.value)} onValueChange={(e) => input.onChange(e.value)} autoFocus />
-                    <label htmlFor="month" >month*</label>
-                  </span>
-                </div>
-              )} />
+<Field name="endDate" render={({ input }) => (
+  <div className="field">
+      <span className="p-float-label">
+          <Calendar id="endDate" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
+          <label htmlFor="endDate">End Date</label>
+      </span>
+  </div>
+)} />
               
               <div className="p-mt-4">
                 <Button label="Submit" onClick={handleSubmit} className="p-button-success mt-3" />

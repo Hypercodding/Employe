@@ -30,7 +30,7 @@ router.post('/addemployee',[
 ], async (req, res)=>{
     try {
         //destructuring
-        const {name,salary, dateOfBirth, gender, cnic, designation, dateOfHiring, employeeStatus, phoneNumber, cmpId} = req.body;
+        const {name,salary,overTime, dateOfBirth, gender, cnic, designation, dateOfHiring, employeeStatus, phoneNumber, cmpId} = req.body;
         
         
         //validation
@@ -45,7 +45,7 @@ router.post('/addemployee',[
           }
 
         const employee = new Employee({
-          name,salary, dateOfBirth, gender, cnic, designation, dateOfHiring, employeeStatus, phoneNumber, company: company._id
+          name,salary,overTime, dateOfBirth, gender, cnic, designation, dateOfHiring, employeeStatus, phoneNumber, company: company._id
         })
 
         const savedEmployee = await employee.save();
@@ -161,91 +161,6 @@ router.post('/getEmpByCnic', [
     }
   });
 
-
-
-  // Endpoint to fetch specific user data by CNIC from request body and send as PDF
-// Endpoint to fetch specific user data by employee ID from request params and send as PDF
-router.post('/getEmpByEmployeeIdAsPdf/:employeeId', async (req, res) => {
-  try {
-    // Retrieve user data based on employee ID from request params
-    const { employeeId } = req.params;
-    const emp = await Salary.findOne({ employee: employeeId });
-
-    if (!emp) {
-      return res.status(404).json({ message: 'Employee not found for the provided ID' });
-    }
-
-    // Generate PDF content (replace this with your HTML content)
-   const htmlContent = `
-        <div style="text-align: center;">
-<h1>Errors and Omissions are accepted</h1>
-        <table  style="width:100%;border: 1px solid black">
-  <tr>
-      <th colspan="4" style="border: 1px solid black">SALARY SLIP</th>
-  </tr>
-  <tr>
-    <td style="border: 1px solid black"><b>Name</b></td>
-    <td style="border: 1px solid black">${emp.name}</td>
-    <td style="border: 1px solid black"><b>Date</b></td>
-    <td style="border: 1px solid black">${new Date().toLocaleDateString('en-GB')}</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid black"><b>CNIC</b></td>
-    <td style="border: 1px solid black">${emp.cnic}</td>
-    <td style="border: 1px solid black"><b>Number</b></td>
-    <td style="border: 1px solid black">${emp.phoneNumber}</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid black"><b>Company</b></td>
-    <td style="border: 1px solid black">${emp.cmp.name}</td>
-    <td style="border: 1px solid black"><b>Designation</b></td>
-    <td style="border: 1px solid black">${emp.designation}</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid black"><b>Net Salary</b></td>
-    <td style="border: 1px solid black">${emp.salary}</td>
-    <td style="border: 1px solid black"><b>leaves</b></td>
-    <td style="border: 1px solid black">${emp.leave_balance - 4}</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid black"></td>
-    <td style="border: 1px solid black"></td>
-    <td style="border: 1px solid black"><b>Payable</b></td>
-    <td style="border: 1px solid black">${emp.leave_balance > 4 ? emp.salary - (emp.leave_balance * 10) : emp.salary}</td>
-  </tr>
-</table>
-<h3 style="margin-top: 150px;text-align:right;">Sign:_________________</h3>
-      </div>
-      `;
-
-    // Options for the PDF generation
-    const pdfOptions = { format: 'Letter' };
-
-    // Generate PDF
-    pdf.create(htmlContent, pdfOptions).toFile((err, filePath) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Error generating PDF');
-      }
-
-      // Send the PDF file to the client
-      res.download(filePath.filename, 'employee_salary_slip.pdf', (downloadErr) => {
-        if (downloadErr) {
-          console.error(downloadErr);
-          res.status(500).send('Error sending PDF to client');
-        }
-
-        // Delete the temporary PDF file after sending
-        fs.unlinkSync(filePath.filename);
-      });
-    });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Some error occurred!');
-  }
-});
-
-
 router.get('/employeeLeaveInfo', async (req, res) => {
   try {
     const today = new Date();
@@ -297,6 +212,8 @@ router.get('/employeeLeaveInfo', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });  
-  // ... (other routes and
+
+//Route:
+
 
 module.exports = router
