@@ -65,7 +65,7 @@ function SalData({ SalData, loadData }) {
         // Extract the filename from the content-disposition header if available
         const contentDisposition = response.headers.get('content-disposition');
         const filenameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
-        const filename = filenameMatch ? filenameMatch[1] : `SalarySlip_${rowData._id}.pdf`;
+        const filename = filenameMatch ? filenameMatch[1] : `SalarySlip_${rowData._id}_${rowData.employeeName}.pdf`;
 
         // Set the download attribute with the filename
         link.setAttribute('download', filename);

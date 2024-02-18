@@ -94,7 +94,7 @@ const loans = await Loans.findOne({ employeeId: salary.employeeId }).sort({ _id:
       }
 
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename=SalarySlip_${Salary.employeeId}.pdf`);
+      res.setHeader('Content-Disposition', `attachment; filename=SalarySlip_${employee.name}.pdf`);
 
       stream.pipe(res);
     });

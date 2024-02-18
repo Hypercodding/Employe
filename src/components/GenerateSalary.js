@@ -1,9 +1,42 @@
-// SalaryForm.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, DataTable, Column, InputSwitch, Checkbox } from 'primereact';
+import { Toast } from 'primereact/toast';
+import { Dialog } from 'primereact/dialog';
+
 
 const SalaryForm = () => {
+  const toast = useRef(null);
+  //preview
+  const [previewSalaries, setPreviewSalaries] = useState([]);
+  const [previewDialogVisible, setPreviewDialogVisible] = useState(false);
+
+
+  const handlePreview = () => {
+    const previewData = selectedEmployees.map((employeeId) => {
+      const employee = employees.find((e) => e._id === employeeId);
+      const deductLeave = deductLeaves[employeeId] || false;
+      const leaveDays = employee.leaveDays !== null ? employee.leaveDays : 0;
+      const leavesAmount = leaveDays * 100;
+      const finalSalary = deductLeave ? employee.salary - leavesAmount : employee.salary;
+
+      return {
+        employeeId: employee._id,
+        employeeName: employee.employeeName,
+        salary: employee.salary,
+        leaveDays,
+        leavesAmount,
+        finalSalary,
+      };
+    });
+
+    setPreviewSalaries(previewData);
+    setPreviewDialogVisible(true);
+  };
+
+  const hidePreviewDialog = () => {
+    setPreviewDialogVisible(false);
+  };
   const [employees, setEmployees] = useState([]);
   const [deductLeaves, setDeductLeaves] = useState({});
   const [selectedEmployees, setSelectedEmployees] = useState([]);
@@ -14,7 +47,7 @@ const SalaryForm = () => {
     // Fetch the list of employees when the component mounts
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost:3500/api/employee/employeeLeaveInfo');
+        const response = await fetch('http://localhost:3500/api/employee/employeeSalaryInfo');
         if (response.ok) {
           const json = await response.json();
 
@@ -88,6 +121,15 @@ const SalaryForm = () => {
 
   const handleSubmit = async () => {
     try {
+      if (selectedEmployees.length === 0) {
+        toast.current.show({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Select at least one employee',
+          life: 3000,
+        });
+        return; // Exit the function if no employee is selected
+      }
       // Submit only for the selected employees
       const response = await fetch('http://localhost:3500/api/salary/create-multiple', {
         method: 'POST',
@@ -101,7 +143,23 @@ const SalaryForm = () => {
       if (response.ok) {
         const result = await response.json();
         setCreatedSalaries(result.createdSalaries);
+        toast.current.show({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Generated',
+          life: 3000,
+      });
       }
+      else {
+            // console.error('Login failed:', response.status, response.statusText);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Select an employee',
+                life: 3000,
+            });
+        }
+    
     } catch (error) {
       console.error('Network error:', error.message);
     }
@@ -109,10 +167,12 @@ const SalaryForm = () => {
 
   return (
     <div>
-      <h2>Create Salaries</h2>
+      <Toast ref={toast} position="top-center" />
+      {/* <h2 style={{ textAlign: 'center'}}>Create Salaries</h2> */}
       <DataTable value={employees}>
         <Column header={renderSelectAllCheckbox()} body={renderEmployeeCheckbox} />
         <Column field="employeeName" header="Employee Name" />
+        <Column field="salary" header="Salary" />
         <Column
     header="Leaves"
     body={(rowData) => (
@@ -120,11 +180,12 @@ const SalaryForm = () => {
     )}
   />
   <Column
-    header="Leaves (in %)"
+    header="Leaves Amount"
     body={(rowData) => (
       <span>{rowData.leaveDays !== null ? rowData.leaveDays * 100 : ''}</span>
     )}
   />
+   {/* <Column field="finalSalary" header="Salary" /> */}
         <Column header="Deduct Leave" body={(rowData) => (
           <InputSwitch
             checked={deductLeaves[rowData._id] || false}
@@ -132,18 +193,28 @@ const SalaryForm = () => {
           />
         )} />
       </DataTable>
-      <Button label="Submit" className="p-button-success" onClick={handleSubmit} />
+      {/* <Button label="Submit" className="p-button-success" onClick={handleSubmit} /> */}
+      <Button label="Preview " className="p-button-success ml-2" onClick={handlePreview} />
 
-      {createdSalaries.length > 0 && (
-        <div>
-          <h3 className="">Created Salaries</h3>
-          <DataTable value={createdSalaries} emptyMessage="No salaries created">
-            <Column field="employeeId" header="Employee ID" />
+      <Dialog
+        visible={previewDialogVisible}
+        onHide={hidePreviewDialog}
+        header="Salary Preview"
+        footer={<Button label="Confirm and Submit" className="p-button-success" onClick={handleSubmit} />}
+      >
+        {previewSalaries.length > 0 ? (
+          <DataTable value={previewSalaries} emptyMessage="No salaries to preview">
+            <Column field="employeeName" header="Employee Name" />
+            <Column field="salary" header="Salary" />
+            <Column field="leaveDays" header="Leaves" />
+            <Column field="leavesAmount" header="Leaves Amount" />
             <Column field="finalSalary" header="Final Salary" />
           </DataTable>
-        </div>
-      )}
-    </div>
+        ) : (
+          <p>No salaries to preview.</p>
+        )}
+      </Dialog>
+      </div>
   );
 };
 

@@ -22,12 +22,10 @@ app.use('/api/loan', require('./routes/loan'))
 app.use('/api/leave', require('./routes/leave'))
 app.use('/api/account', require('./routes/account'))
 
+app.use('/api/erpCompany', require('./routes/erpcompany'))
 app.use('/api/salary', require('./routes/salary'))
 app.use('/api/purchase', require('./routes/purchase'))
 app.use('/api/company', require('./routes/cmp'))//company
-// app.use('/api/items', require('./routes/items'))//company
-// app.use('/api/product', require('./routes/product'))//product
-// app.use('/api/salary', require('./routes/salary'))//product
 
   
   app.listen(port, () => {

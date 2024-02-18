@@ -85,9 +85,9 @@ export const Login = () => {
         <div className="form-demo">
             <Toast ref={toast} position="top-center" />
 
-            <div className="flex justify-content-center align-items-center" style={{ height: '90vh', backgroundColor: 'var(--highlight-bg)' }}>
+            <div className="flex justify-content-center align-items-center" style={{ height: '100vh', backgroundColor: '#1A2745' }}>
                 <div className="card ml-5 style={{ border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}">
-                    <h5 className="text-center">LogIn</h5>
+                    <h5 className="text-center text-blue-200 text-xl fadein animation-duration-1000 ">LOG IN</h5>
                     <Form
                         onSubmit={onSubmit}
                         initialValues={{ phoneNumber: '', password: '' }}

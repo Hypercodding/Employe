@@ -12,22 +12,13 @@ const ItemSchema = new Schema({
     required: true,
     unique: true,
   },
-  amount: {
+  itemNo: {
     type: Number,
     required: true,
   },
-  date: {
+  CreatedAt: {
     type: Date,
     default: Date.now
-
-  },
-  vendor: {
-    type: String,
-    required: true,
-  },
-  itemQuantity: {
-    type: Number,
-    required: true,
   },
 });
 

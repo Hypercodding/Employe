@@ -10,11 +10,11 @@ const ProtectedRoute = () => {
       try {
         const isAuthenticated = await checkAuthentication();
         if (!isAuthenticated) {
-          navigate('/');
+          navigate('/Login');
         }
       } catch (error) {
         console.error('Error checking authentication:', error);
-        navigate('/');
+        navigate('/Login');
       }
     };
 

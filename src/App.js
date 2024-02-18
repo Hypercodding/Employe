@@ -29,6 +29,7 @@ import PurchaseForm from './components/PurchaseForm';
 import PurchaseTable from './components/PurchaseTable';
 // import AddEmp from './components/AddEmp';
 import Register from './components/Register';
+import ERPHome from './components/ERPHome';
 
 function App() {
   return (
@@ -43,18 +44,20 @@ function AppContent() {
   const location = useLocation();
   const { isLoggedIn } = useAuth(); // Assuming you have a useAuth hook from your authentication context
 
-  if (!isLoggedIn && location.pathname === '/') {
+  if (!isLoggedIn && location.pathname === '/Login') {
     // If not authenticated and on the root path, redirect to the login page
     return <Login />;
   }
   return (
     <>
             <header>
-        {location.pathname !== '/' ? <Navbar /> : null}
-      </header>
+  {location.pathname !== '/login' && location.pathname !== '/' && <Navbar />}
+</header>
+
      
       <Routes>
-        <Route path="/" element={<Login />} />
+      <Route path="/" element={<ERPHome />} />
+        <Route path="/login" element={<Login />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<Home />} path="/home" exact />
           <Route element={<Employee />} path="/employee" exact />

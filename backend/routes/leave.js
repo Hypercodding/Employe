@@ -93,11 +93,21 @@ router.get('/:employeeId/:month', async (req, res) => {
 router.put('/updateLeave/:leaveId', async (req, res) => {
   try {
     const leaveId = req.params.leaveId;
-    const { days } = req.body;
+    const { startDate, endDate } = req.body;
+
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    // Calculate the difference in milliseconds between startDate and endDate
+    const daysDifference = endDateObj.getTime() - startDateObj.getTime();
+
+    // Convert milliseconds to days and round to the nearest whole number
+    const days = Math.round((daysDifference / (1000 * 60 * 60 * 24))+1);
 
     const updatedLeave = await Leave.findByIdAndUpdate(
       leaveId,
-      { days },
+      {$set: { startDate, endDate,days,month: startDateObj.getMonth() + 1,  // Adding 1 since getMonth() returns 0-based index
+      year: startDateObj.getFullYear() }},
       { new: true }
     );
 

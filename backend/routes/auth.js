@@ -6,13 +6,12 @@ var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser')
 const Company = require('../models/Company')
+const ErpCompany = require('../models/ERPCompany')
 
 //token pass
 const JWT_secret = 'Usman';
 
 
-
-// ROUTE: CREATE USER
 // ROUTE: CREATE USER
 router.post('/createUser', [
     // ... (your existing validation code)
@@ -40,6 +39,7 @@ router.post('/createUser', [
 
         // Create a user
         const user = new User({
+            ErpCompany: company._id,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             password: secPass,
@@ -62,13 +62,14 @@ router.post('/createUser', [
         await user.save();
         await company.save();
 
-        // Populate the manager field with user's information
-        // company = await Company.findById(company._id).populate('manager', 'firstName lastName');
-
         // Generate JWT token
         const data = {
             user: {
-                id: user.id
+                
+                firstName: user.firstName,
+                role: user.role,
+                Erpcompany_id: user.ErpCompany 
+                
             }
         };
 
@@ -130,9 +131,9 @@ router.get('/getUser',fetchuser, async (req, res)=>{
 
         const data = {
             user: {
-                id: user.id,
                 firstName: user.firstName,
-                role: user.role
+                role: user.role,
+                Erpcompany_id: user.ErpCompany 
             }
         }
     

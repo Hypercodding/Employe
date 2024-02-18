@@ -10,6 +10,8 @@ import { classNames } from 'primereact/utils';
 import { InputText } from 'primereact/inputtext';
 import { Form, Field } from 'react-final-form';
 import { Dialog } from 'primereact/dialog';
+import { Calendar } from 'primereact/calendar';
+
 
 function LeavesData({ LeavesData, loadData }) {
   const navigate = useNavigate();
@@ -24,13 +26,13 @@ function LeavesData({ LeavesData, loadData }) {
   const onSubmit = async (data, form) => {
     setFormData(data);
   
-    const { _id, days, month, year } = data;
+    const { _id,startDate, endDate } = data;
   
     try {
       var response = await fetch(`http://localhost:3500/api/leave/updateLeave/${_id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ days, month, year })
+        body: JSON.stringify({ startDate,endDate })
       });
   
     } catch (error) {
@@ -112,7 +114,16 @@ function LeavesData({ LeavesData, loadData }) {
   };
 
   const handleEdit = (rowData) => {
-    setSelectedLeaves(rowData);
+    const startDate = rowData.startDate ? new Date(rowData.startDate) : null;
+    const endDate = rowData.endDate ? new Date(rowData.endDate) : null;
+  
+    // Set selectedLeaves state with the converted dates
+    setSelectedLeaves({
+      ...rowData,
+      startDate,
+      endDate,
+    });
+  
     setVisible(true);
   };
 
@@ -149,30 +160,61 @@ function LeavesData({ LeavesData, loadData }) {
           <div className="flex justify-content-center">
             <div className="card">
               <h5 className="text-center">Edit Leaves</h5>
-              <Form onSubmit={onSubmit} initialValues={selectedLeaves}  render={({ handleSubmit }) => (
-                
-                <form onSubmit={handleSubmit} className="p-fluid">
-                <div className="p-grid p-formgrid">
-            
-        <div className="p-col">
-        <Field name="days" render={({ input, meta }) => (
-                <div className="field">
-                  <span className="p-float-label">
-                    <InputNumber id="days" value={parseInt(input.value)} onValueChange={(e) => input.onChange(e.value)} autoFocus />
-                    <label htmlFor="days" >days*</label>
-                  </span>
-                </div>
-              )} />
+              <Form
+                onSubmit={onSubmit}
+                initialValues={selectedLeaves || {}} // Use an empty object as a fallback
+                render={({ handleSubmit }) => (
+                  <form onSubmit={handleSubmit} className="p-fluid">
+                    <div className="p-grid p-formgrid">
+                      <div className="p-col">
+                        <Field
+                          name="startDate"
+                          render={({ input }) => (
+                            <div className="field">
+                              <span className="p-float-label">
+                                <Calendar
+                                  id="startDate"
+                                  {...input}
+                                  dateFormat="dd/mm/yy"
+                                  mask="99/99/9999"
+                                  showIcon
+                                />
+                                <label htmlFor="startDate">Start Date</label>
+                              </span>
+                            </div>
+                          )}
+                        />
 
-        </div>
-       
-        </div>
-                  {/* Add other form fields for editing */}
-
-                  <Button type="submit" label="Update" className="mt-2" />
-                  <Button type="button" label="Cancel" onClick={() => setVisible(false)} className="p-button-secondary mt-2" />
-                </form>
-              )} />
+                        <Field
+                          name="endDate"
+                          render={({ input }) => (
+                            <div className="field">
+                              <span className="p-float-label">
+                                <Calendar
+                                  id="endDate"
+                                  {...input}
+                                  dateFormat="dd/mm/yy"
+                                  mask="99/99/9999"
+                                  showIcon
+                                />
+                                <label htmlFor="endDate">End Date</label>
+                              </span>
+                            </div>
+                          )}
+                        />
+                      </div>
+                    </div>
+                    {/* Add other form fields for editing */}
+                    <Button type="submit" label="Update" className="mt-2" />
+                    <Button
+                      type="button"
+                      label="Cancel"
+                      onClick={() => setVisible(false)}
+                      className="p-button-secondary mt-2"
+                    />
+                  </form>
+                )}
+              />
             </div>
           </div>
         </div>

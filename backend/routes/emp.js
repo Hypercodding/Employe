@@ -160,59 +160,96 @@ router.post('/getEmpByCnic', [
       res.status(500).send('Some error occurred!');
     }
   });
-
-router.get('/employeeLeaveInfo', async (req, res) => {
-  try {
-    const today = new Date();
-    const currentMonth = today.getMonth() + 1;
-    const currentYear = today.getFullYear();
-
-    console.log('Current Month:', currentMonth, 'Current Year:', currentYear);
-
-    const employeeLeaveInfo = await Employee.aggregate([
-      {
-        $lookup: {
-          from: 'leaves',
-          localField: '_id',
-          foreignField: 'employeeId',
-          as: 'leaveDetails',
-        },
-      },
-      {
-        $unwind: {
-          path: '$leaveDetails',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          employeeName: '$name',
-          leaveDays: {
-            $ifNull: [
-              {
-                $cond: {
-                  if: { $eq: ['$leaveDetails.month', currentMonth] },
-                  then: '$leaveDetails.days',
-                  else: null,
-                },
-              },
-              null,
-            ],
+  router.get('/employeeSalaryInfo', async (req, res) => {
+    try {
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1;
+  
+      const employeeSalaryInfo = await Employee.aggregate([
+        {
+          $lookup: {
+            from: 'leaves',
+            localField: '_id',
+            foreignField: 'employeeId',
+            as: 'leaveDetails',
           },
         },
-      },
-    ]);
-
-    console.log('Employee Leave Info:', employeeLeaveInfo);
-
-    res.json(employeeLeaveInfo);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Internal Server Error');
-  }
-});  
-
+        {
+          $lookup: {
+            from: 'loans',
+            localField: '_id',
+            foreignField: 'employeeId',
+            as: 'loanDetails',
+          },
+        },
+        {
+          $lookup: {
+            from: 'salary',
+            localField: '_id',
+            foreignField: 'employeeId',
+            as: 'salaryDetails',
+          },
+        },
+        // Add more lookups for other salary components (e.g., final salary, base salary)
+  
+        // Unwind leaveDetails and loanDetails arrays
+        {
+          $unwind: {
+            path: '$leaveDetails',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $unwind: {
+            path: '$salaryDetails',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $unwind: {
+            path: '$loanDetails',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        // Add more $unwind stages for other salary components
+  
+        // Group by employeeId and calculate total leave days
+        {
+          $group: {
+            _id: '$_id',
+            employeeName: { $first: '$name' },
+            salary: { $first: '$salary' },
+            finalSalary: { $first: '$salaryDetails.finalSalary' },
+            leaveDays: { $sum: '$leaveDetails.days' },
+            totalLoans: { $sum: '$loanDetails.amount' },
+            // Add more fields for other salary components
+          },
+        },
+        // Optionally, add a $project stage to customize the output
+  
+        // Add more stages for other salary components
+  
+        // Project the desired fields for the response
+        {
+          $project: {
+            _id: 1,
+            employeeName: 1,
+            leaveDays: 1,
+            totalLoans: 1,
+            salary: 1,
+            finalSalary: 1,
+            // Add more fields for other salary components
+          },
+        },
+      ]);
+  
+      res.json(employeeSalaryInfo);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  
 //Route:
 
 

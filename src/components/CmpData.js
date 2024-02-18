@@ -55,7 +55,7 @@ const [cmpState, setCmpState] = useState([]);
   
     const { _id, name, salary, gender, phone_number,employee_status, cnic, department, dob, date_of_hire, job_title } = data;
   
-    var response =await fetch(`http://localhost:3500/api/company/delete/${_id}`, {
+    var response =await fetch(`http://localhost:3500/api/company/deleteCompany/${_id}`, {
       method: 'DELETE',
 
       

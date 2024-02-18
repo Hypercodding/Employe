@@ -1,60 +1,33 @@
-import React from 'react'
-import { Menubar } from 'primereact/menubar';
+import React from 'react';
+import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
+import './ERPHome.css';
 
 const ERPHome = () => {
-    const items = [
-        {
-            label: 'Home',
-            icon: 'pi pi-home'
-        },
-        {
-            label: 'Features',
-            icon: 'pi pi-star'
-        },
-        {
-            label: 'Projects',
-            icon: 'pi pi-search',
-            items: [
-                {
-                    label: 'Components',
-                    icon: 'pi pi-bolt'
-                },
-                {
-                    label: 'Blocks',
-                    icon: 'pi pi-server'
-                },
-                {
-                    label: 'UI Kit',
-                    icon: 'pi pi-pencil'
-                },
-                {
-                    label: 'Templates',
-                    icon: 'pi pi-palette',
-                    items: [
-                        {
-                            label: 'Apollo',
-                            icon: 'pi pi-palette'
-                        },
-                        {
-                            label: 'Ultima',
-                            icon: 'pi pi-palette'
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            label: 'Contact',
-            icon: 'pi pi-envelope'
-        }
-    ];
-  return (
-   <>
-    <div className="card">
-            <Menubar model={items} />
-        </div>
-   </>
-  )
-}
+    const navigate = useNavigate();
 
-export default ERPHome
+    const navigateTo = () => {
+        navigate('/login');
+    };
+
+    return (
+        <div className="erp-home-container">
+            {[...Array(150)].map((_, index) => (
+                <div
+                    key={index}
+                    className="star"
+                    style={{
+                        top: `${Math.random() * 100}vh`,
+                        left: `${Math.random() * 100}vw`,
+                        animationDelay: `${Math.random()}s`,
+                    }}
+                />
+            ))}
+            <Button className="bg-gray-900 hover:bg-blue-900 text-white" label="Login" onClick={navigateTo} text raised />
+            
+            {/* <div className="moon"></div> */}
+        </div>
+    );
+};
+
+export default ERPHome;

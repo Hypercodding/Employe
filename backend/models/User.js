@@ -5,6 +5,10 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema ({
     
+    ErpCompany: {
+        type: Schema.Types.ObjectId,
+        required: true,
+    },
     password: { 
         type: String,
         required: true

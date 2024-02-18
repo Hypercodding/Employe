@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.5); }
+}
+
+.erp-home-container {
+    background-color: #000;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 20px;
+    position: relative;
+}
+
+.star {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background-color: #fff;
+    animation: twinkle 1s infinite;
+}
+
+.bg-gray-900 {
+    background-color: #333;
+}
+
+.bg-gray-900:hover {
+    background-color: #007bff;
+}
+
+.moon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f0e68c; /* Light yellow color for the moon */
+    box-shadow: 0 0 20px #ffd700; /* Yellowish glow effect */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
