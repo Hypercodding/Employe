@@ -5,8 +5,14 @@ import AddEmp from './AddEmp';
 const Register = () => {
   return (
     <>
-    <div className="flex justify-content-center align-items-center mt-3 height-100vh">
-      <div className=" ">
+    <div className="">
+    
+      <div  style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+      }} >
         <AddEmp />
       </div>
     </div>

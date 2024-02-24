@@ -8,13 +8,10 @@ import { Login } from './components/Login';
 // import Register from './components/Register';
 import Employee from './components/Employee';
 import { Signin } from './components/Signin';
-// import { AuthProvider } from './context/emp/authContext';
-// import EmpStates from './context/emp/EmpStates';
 import {Register_company} from './components/Register_company';
 import Company from './components/Company';
-import Inventry from './components/Inventry';
+import Inventry from './components/Inventory';
 import FetchUserData from './components/FetchUserData';
-import { Add_item } from './components/Add_item';
 import { SellProduct } from './components/SellProduct';
 import { AuthProvider, useAuth } from './context/authContext'; // Import useAuth and AuthProvider
 
@@ -30,6 +27,13 @@ import PurchaseTable from './components/PurchaseTable';
 // import AddEmp from './components/AddEmp';
 import Register from './components/Register';
 import ERPHome from './components/ERPHome';
+import Item from './components/Item';
+import ForgotPassword from './components/ForgetPassword';
+import ResetPassword from './components/ResetPassword';
+import AddProduct from './components/AddProduct';
+import Inventory from './components/Inventory';
+
+
 
 function App() {
   return (
@@ -51,23 +55,25 @@ function AppContent() {
   return (
     <>
             <header>
-  {location.pathname !== '/login' && location.pathname !== '/' && <Navbar />}
+  {location.pathname !== '/login' && location.pathname !== '/' && location.pathname !== '/forgotPassword' && location.pathname !== '/resetPassword' && <Navbar />}
 </header>
 
      
       <Routes>
       <Route path="/" element={<ERPHome />} />
+      
+      <Route element={<ForgotPassword />} path="/forgotPassword" exact />
+      <Route element={<ResetPassword />} path="/resetPassword" exact />
         <Route path="/login" element={<Login />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<Home />} path="/home" exact />
+          
           <Route element={<Employee />} path="/employee" exact />
           <Route element={<Signin />} path="/signin" exact />
           <Route element={<Register />} path="/register" exact />
           <Route element={<Company />} path="/company" exact />
           <Route element={<Register_company />} path="/register_company" exact />
           <Route element={<FetchUserData />} path="/fetchUserData" exact />
-          <Route element={<Inventry />} path="/inventry" exact />
-          <Route element={<Add_item />} path="/add_item" exact />
           <Route element={<SellProduct />} path="/sellProduct" exact />
           <Route element={<Salary />} path="/salary" exact />
           <Route element={<AddLeave/>} path="/addLeaves" exact />  
@@ -78,6 +84,10 @@ function AppContent() {
           <Route element={<Account/>} path="/account" exact />
           <Route element={<PurchaseForm/>} path="/addPurchase" exact />
           <Route element={<PurchaseTable/>} path="/Purchase" exact />
+          <Route element={<Item/>} path="/Item" exact />
+          <Route element={<AddProduct/>} path="/addProduct" exact />
+          <Route element={<Inventory/>} path="/inventry" exact />
+
         </Route>
       </Routes>
     </>

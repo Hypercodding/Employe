@@ -5,7 +5,8 @@ const router = express.Router();
 const multer = require('multer'); // for handling file uploads
 const Purchase = require('../models/Purchase');
 const Account = require('../models/Account');
-
+const Item = require('../models/Item');
+const Inventory = require('../models/Inventory');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -27,48 +28,103 @@ const storage = multer.diskStorage({
   
   // Add Purchase
  // Add Purchase
-router.post('/add', upload.single('receipt'), async (req, res) => {
-    const { itemName, quantity, amountPerPiece, vendorName, bankName } = req.body;
-  
-    try {
-        const TotalAmount = quantity * amountPerPiece;
 
-      const purchase = new Purchase({
-        itemName,
+ router.post('/add', upload.single('receipt'), async (req, res) => {
+  const { itemName, quantity, amountPerPiece, vendorName, bankName, expiryDate } = req.body;
+
+  try {
+    const TotalAmount = quantity * amountPerPiece;
+
+    // Continue with the rest of your purchase creation logic
+    const purchase = new Purchase({
+      itemName,
+      quantity,
+      amountPerPiece,
+      TotalAmount,
+      vendorName,
+      bankName,
+      expiryDate,
+      receipt: req.file.path,
+    });
+
+    await purchase.save();
+
+    // Check if an inventory entry with the same item name already exists
+    const existingInventoryEntry = await Inventory.findOne({ item: itemName });
+
+    if (existingInventoryEntry) {
+      // If it exists, update the quantity
+      existingInventoryEntry.quantity += parseInt(quantity);
+            await existingInventoryEntry.save();
+    } else {
+      // If it doesn't exist, create a new inventory entry
+      const inventoryEntry = new Inventory({
+        item: itemName,
         quantity,
-        amountPerPiece,
-        TotalAmount,
-        vendorName,
-        bankName,
-        receipt: req.file.path, // Save the file path in the 'receipt' field
+        // ... (other fields you might want to include)
       });
-  
-      await purchase.save();
-  
-      // Update the amount in the relevant bank in the 'account' table
-      const account = await Account.findOne({ _id: bankName });
-      if (account) {
-        account.totalAmount += parseFloat(TotalAmount); // Assuming 'amount' is a numeric value
-        await account.save();
-        console.log(account);
-      } else {
-        console.error('Bank account not found');
-      }
-  
-      res.status(201).json({ message: 'Purchase added successfully', purchase });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).send('Server Error');
+
+      await inventoryEntry.save();
     }
-  });
-    
 
+    // Update the amount in the relevant bank in the 'account' table
+    const account = await Account.findOne({ _id: bankName });
+    if (account) {
+      account.totalAmount += parseFloat(TotalAmount);
+      await account.save();
+      console.log(account);
+    } else {
+      console.error('Bank account not found');
+    }
 
-router.get('/getPurchase', async (req, res)=>{
-    const purchase = await Purchase.find();
-      res.json(purchase)
-  })
+    res.status(201).json({ message: 'Purchase added successfully', purchase });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});    
 
+// Get all purchases with item details
+router.get('/getPurchase', async (req, res) => {
+  try {
+    const purchases = await Purchase.aggregate([
+      {
+        $lookup: {
+          from: 'items', // Use the actual name of the items collection
+          localField: 'itemName',
+          foreignField: '_id',
+          as: 'itemDetails',
+        },
+      },
+      {
+        $unwind: '$itemDetails',
+      },
+      {
+        $project: {
+          _id: 1,
+          quantity: 1,
+          amountPerPiece: 1,
+          TotalAmount: 1,
+          vendorName: 1,
+          bankName: 1,
+          receipt: 1,
+          purchaseDate: 1,
+          expiryDate: 1,
+          'itemDetails.itemName': 1,
+          'itemDetails.itemNo': 1,
+        },
+      },
+    ]);
+
+    res.json(purchases);
+  } catch (error) {
+    console.error('Error fetching purchases:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+module.exports = router;
+  
 
   router.get('/:purchaseId', async (req, res) => {
     try {

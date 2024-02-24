@@ -21,6 +21,9 @@ app.use('/api/loan', require('./routes/loan'))
 
 app.use('/api/leave', require('./routes/leave'))
 app.use('/api/account', require('./routes/account'))
+app.use('/api/item', require('./routes/item'))
+app.use('/api/product', require('./routes/product'))
+app.use('/api/inventory', require('./routes/inventory'))
 
 app.use('/api/erpCompany', require('./routes/erpcompany'))
 app.use('/api/salary', require('./routes/salary'))

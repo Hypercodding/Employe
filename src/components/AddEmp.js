@@ -9,7 +9,7 @@ import { classNames } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from 'primereact/checkbox';
 
-
+ 
 const AddEmp = () => {
     let navigate = useNavigate();
     const [showMessage, setShowMessage] = useState(false);
@@ -19,7 +19,7 @@ const AddEmp = () => {
     useEffect(() => {
         const fetchCompanies = async () => {
             try {
-                const response = await fetch('http://localhost:3500/api/company');
+                const response = await fetch('http://localhost:3500/api/company/');
                 if (response.ok) {
                     const json = await response.json();
                     setCompanies(json);
@@ -110,14 +110,18 @@ const AddEmp = () => {
 
     return (
         
-        <div className="border-round surface-200 font-bold p-2 w-25rem">
+        <div className="flex items-center justify-center h-screen w-8 px-8">
             
-            <div className="p-col-12">
+            <div className="p-grid p-fluid rounded-lg p-p-4 bg-white " style={{
+        
+        alignItems: 'center',
+        
+      }}>
                 
-                <Form onSubmit={onSubmit} initialValues={{ name: '', cmpId: '',overTime: false, salary: '', phoneNumber: '', dateOfHiring: null, dateOfBirth: null, employeeStatus: null, cnic: '', designation: '', date: null, gender: null }} validate={validate} render={({ handleSubmit }) => (
+                <Form   onSubmit={onSubmit} initialValues={{ name: '', cmpId: '',overTime: false, salary: '', phoneNumber: '', dateOfHiring: null, dateOfBirth: null, employeeStatus: null, cnic: '', designation: '', date: null, gender: null }} validate={validate} render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit} className="p-fluid">
-                        <div className="p-formgrid p-grid">
-                            <div className="p-field p-col-12 p-md-6">
+                        <div className="formgroup-inline justify-content-center px-8 mt-2">
+                            <div className="field col-12 md:col-5 ">
                                 <Field name="name" render={({ input, meta }) => (
                                     <div className="field">
                                         <span className="p-float-label">
@@ -127,7 +131,8 @@ const AddEmp = () => {
                                         {getFormErrorMessage(meta)}
                                     </div>
                                 )} />
-
+                                </div>
+                                <div className="field col-12 md:col-5">
                                 <Field name="salary" render={({ input, meta }) => (
                                     <div className="field">
                                         <span className="p-float-label">
@@ -137,6 +142,9 @@ const AddEmp = () => {
                                         {getFormErrorMessage(meta)}
                                     </div>
                                 )} />
+                                
+                                </div>
+                                <div className="field col-10 md:col-5 ">
 
                                 <Field name="designation" render={({ input, meta }) => (
                                     <div className="field">
@@ -148,32 +156,7 @@ const AddEmp = () => {
                                     </div>
                                 )} />
                             </div>
-
-                            <div className="p-field p-col-12 p-md-6">
-                                <Field
-                                    name="cmpId"
-                                    render={({ input, meta }) => (
-                                        <div className="field">
-                                            <span className="p-float-label">
-                                                <Dropdown id="cmpId" {...input} options={companies} optionLabel="name" optionValue="_id" />
-                                                <label htmlFor="cmpId" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
-                                                    Company*
-                                                </label>
-                                            </span>
-                                            {getFormErrorMessage(meta)}
-                                        </div>
-                                    )}
-                                />
-
-                                <Field name="employeeStatus" render={({ input }) => (
-                                    <div className="field">
-                                        <span className="p-float-label">
-                                            <Dropdown id="employeeStatus" {...input} options={statusOptions} optionLabel="label" />
-                                            <label htmlFor="employeeStatus">Status</label>
-                                        </span>
-                                    </div>
-                                )} />
-
+                                <div className="field col-12 md:col-5">
                                 <Field
                                     name="cnic"
                                     render={({ input, meta }) => (
@@ -192,9 +175,58 @@ const AddEmp = () => {
                                         </div>
                                     )}
                                 />
-                            </div>
+                                </div>
+                                <div className="field col-10 md:col-5 ">
+                                    <Field
+                                        name="cmpId"
+                                        render={({ input, meta }) => (
+                                            <div className="field">
+                                                <span className="p-float-label">
+                                                    <Dropdown id="cmpId" {...input} options={companies} optionLabel="name" optionValue="_id" />
+                                                    <label htmlFor="cmpId" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
+                                                        Company*
+                                                    </label>
+                                                </span>
+                                                {getFormErrorMessage(meta)}
+                                            </div>
+                                        )}
+                                    />
+                                </div>
+                                <div className="field col-10 md:col-5 ">
 
-                            <div className="p-field p-col-12 p-md-6">
+                                <Field name="employeeStatus" render={({ input }) => (
+                                    <div className="field">
+                                        <span className="p-float-label">
+                                            <Dropdown id="employeeStatus" {...input} options={statusOptions} optionLabel="label" />
+                                            <label htmlFor="employeeStatus">Status</label>
+                                        </span>
+                                    </div>
+                                )} />
+                                </div>
+                                
+                                
+                                <div className="field col-10 md:col-5">
+
+                                <Field name="dateOfBirth" render={({ input }) => (
+                                    <div className="field">
+                                        <span className="p-float-label">
+                                            <Calendar id="dateOfBirth" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
+                                            <label htmlFor="dateOfBirth">Date of Birth</label>
+                                        </span>
+                                    </div>
+                                )} />
+                              </div>
+                                <div className="field col-10 md:col-5 ">
+                                <Field name="dateOfHiring" render={({ input }) => (
+                                    <div className="field">
+                                        <span className="p-float-label">
+                                            <Calendar id="dateOfHiring" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
+                                            <label htmlFor="dateOfHiring">Date of Hire</label>
+                                        </span>
+                                    </div>
+                                )} />
+                                  </div>
+                                  <div className="field col-10 md:col-5">
                                 <Field
                                     name="phoneNumber"
                                     render={({ input, meta }) => (
@@ -213,26 +245,8 @@ const AddEmp = () => {
                                         </div>
                                     )}
                                 />
-
-                                <Field name="dateOfBirth" render={({ input }) => (
-                                    <div className="field">
-                                        <span className="p-float-label">
-                                            <Calendar id="dateOfBirth" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
-                                            <label htmlFor="dateOfBirth">Date of Birth</label>
-                                        </span>
-                                    </div>
-                                )} />
-                            </div>
-
-                            <div className="p-field p-col-12 p-md-6">
-                                <Field name="dateOfHiring" render={({ input }) => (
-                                    <div className="field">
-                                        <span className="p-float-label">
-                                            <Calendar id="dateOfHiring" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
-                                            <label htmlFor="dateOfHiring">Date of Hire</label>
-                                        </span>
-                                    </div>
-                                )} />
+                                 </div>
+                                <div className="field col-10 md:col-5 ">
 
                                 <Field name="gender" render={({ input }) => (
                                     <div className="field">
@@ -242,27 +256,30 @@ const AddEmp = () => {
                                         </span>
                                     </div>
                                 )} />
+                                </div>
+                                <div className="field col-10 md:col-6 col-offset-3 ">
                                 <Field
-    name="overTime"
-    render={({ input }) => (
-        <div className="field">
-            <span className="p-float-label">
-                <Checkbox
-                    inputId="overTime"
-                    {...input}
-                    checked={input.value || false} // Ensure a default value of false
-                    onChange={(e) => input.onChange(e.checked)}
-                />
-                <label htmlFor="overTime" className="ml-3">Overtime Applied</label>
-            </span>
-        </div>
-    )}
-/>
-
-
+                                name="overTime"
+                                render={({ input }) => (
+                                    <div className="field">
+                                        <span className="p-float-label">
+                                            <Checkbox
+                                                inputId="overTime"
+                                                {...input}
+                                                checked={input.value || false} // Ensure a default value of false
+                                                onChange={(e) => input.onChange(e.checked)}
+                                            />
+                                            <label htmlFor="overTime" className="ml-3">Overtime Applied</label>
+                                        </span>
+                                    </div>
+                                )}
+                                />
                             </div>
+                            </div>
+                                <div className="field col-10 md:col-6 col-offset-3 ">
+                            
+                        <Button type="submit" label="Submit" className=" mx-auto  " />
                         </div>
-                        <Button type="submit" label="Submit" className="mt-2" />
                     </form>
                 )} />
             </div>

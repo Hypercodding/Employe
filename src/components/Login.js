@@ -3,11 +3,13 @@ import { Form, Field } from 'react-final-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
-import { Dialog } from 'primereact/dialog';
 import { classNames } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { Toast } from 'primereact/toast';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+
 
 export const Login = () => {
     const toast = useRef(null);
@@ -74,6 +76,10 @@ export const Login = () => {
     const getFormErrorMessage = (meta) => {
         return isFormFieldValid(meta) && <small className="p-error">{meta.error}</small>;
     };
+    const handleForgotPasswordClick = () => {
+        // Navigate to the 'forgotPassword' route
+        navigate('/forgotPassword');
+      };
 
     const dialogFooter = (
         <div className="flex justify-content-center">
@@ -94,21 +100,23 @@ export const Login = () => {
                         validate={validate}
                         render={({ handleSubmit }) => (
                             <form onSubmit={handleSubmit} className="p-fluid">
-                                <Field
-                                    name="phoneNumber"
-                                    render={({ input, meta }) => (
-                                        <div className="field">
-                                            <span className="p-float-label">
-                                                <InputText id="ph" {...input} autoFocus className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                                                <label htmlFor="ph" className={classNames({ 'p-error': isFormFieldValid(meta) })}>
-                                                    Number*
-                                                </label>
-                                            </span>
-                                            {getFormErrorMessage(meta)}
-                                        </div>
-                                    )}
-                                />
-
+                                <Field name="phoneNumber" render={({ input, meta }) => (
+                            <div className="field">
+                                <span className="p-float-label p-input-icon-right">
+                                    <PhoneInput
+                                        inputProps={{
+                                            name: 'phoneNumber',
+                                            required: true, // Add any other input props you may need
+                                        }}
+                                        placeholder="Enter phone number"
+                                        {...input}
+                                        country={'PK'}
+                                    />
+                                    <label htmlFor="phoneNumber" className={classNames({ 'p-error': isFormFieldValid(meta) })}></label>
+                                </span>
+                                {getFormErrorMessage(meta)}
+                            </div>
+                        )} />
                                 <Field
                                     name="password"
                                     render={({ input, meta }) => (
@@ -125,9 +133,14 @@ export const Login = () => {
                                 />
 
                                 <Button type="submit" label="Submit" className="mt-2" />
+                                
                             </form>
+                            
                         )}
                     />
+                     <p onClick={handleForgotPasswordClick} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
+      Forget Password
+    </p>
                 </div>
             </div>
         </div>

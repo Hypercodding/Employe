@@ -13,7 +13,8 @@ const ItemSchema = new Schema({
     unique: true,
   },
   itemNo: {
-    type: Number,
+    type: String,
+    unique: true,
     required: true,
   },
   CreatedAt: {
@@ -22,4 +23,6 @@ const ItemSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('item', ItemSchema);
+const Item = mongoose.model('Item', ItemSchema);
+
+module.exports = Item;

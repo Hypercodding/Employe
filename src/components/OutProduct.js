@@ -6,7 +6,7 @@ const Company = () => {
   const [proData, setproData] = useState([]);
 
   const loadData = () => {
-    fetch("http://localhost:3500/api/product/getProduct") 
+    fetch("http://localhost:3500/api/product/get") 
     .then(resp => resp.json())
      .then(data => setproData(data))
   }

@@ -54,7 +54,7 @@ router.get('/getCmp', async (req, res) => {
 });
 
 ///
-router.get('/', fetchuser,async (req, res) => {
+router.get('/',async (req, res) => {
     try {
         const companies = await Company.find({companyStatus: 'Active'}, 'name _id'); // Assuming your Company model has 'name' and '_id' fields
         res.json(companies);
@@ -65,7 +65,7 @@ router.get('/', fetchuser,async (req, res) => {
 });
 
 // Endpoint to create a new company
-router.post('/create',fetchuser, async (req, res) => {
+router.post('/create', async (req, res) => {
     try {
       const { name, companyStatus, managerId } = req.body;
   

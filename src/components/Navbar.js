@@ -58,9 +58,14 @@ export default function Navbar() {
       to: '/company',
     },
     {
-      label: 'Puchases',
+      label: 'Stock',
       icon: 'pi pi-box',
       items: [
+        {
+          label: 'Items',
+          icon: 'pi pi-ticket',
+          command: () => navigate('/Item'),
+        },
         {
           label: 'Purchase Item',
           icon: 'pi pi-ticket',
@@ -94,14 +99,19 @@ export default function Navbar() {
       icon: 'pi pi-shopping-bag',
       items: [
         {
-          label: 'Sell Product',
-          icon: 'pi pi-shopping-cart',
-          command: () => navigate('/sellProduct'),
+          label: 'Add Product',
+          icon: 'pi pi-plus',
+          command: () => navigate('/addProduct'),
         },
         {
-          label: 'List',
+          label: 'List Products',
           icon: 'pi pi-list',
           command: () => navigate('/outProduct'),
+        },
+        {
+          label: 'Inventry',
+          icon: 'pi pi-list',
+          command: () => navigate('/inventry'),
         },
       ],
     },

@@ -9,6 +9,8 @@ import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 // import { CountryService } from '../services/CountryService';
 // import './FormDemo.css';
@@ -33,6 +35,7 @@ export const Signin = () => {
         if (!data.password) {
             errors.password = 'Password is required.';
         }
+        
 
         
 
@@ -104,7 +107,7 @@ export const Signin = () => {
             <div className="flex justify-content-center">
                 <div className="card">
                     <h4 className="text-center">USER REGISTRATION</h4>
-                    <Form onSubmit={onSubmit} initialValues={{ firstName: '', lastName: '', phoneNumberoneNumber: '', password: '',role: '' }} validate={validate} render={({ handleSubmit }) => (
+                    <Form onSubmit={onSubmit} initialValues={{ firstName: '', lastName: '', phoneNumber: '', password: '',role: '' }} validate={validate} render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit} className="p-fluid">
                             <Field name="firstName" render={({ input, meta }) => (
                                 <div className="field">
@@ -146,15 +149,25 @@ export const Signin = () => {
                                 )}
                             />
                             <Field name="phoneNumber" render={({ input, meta }) => (
-                                <div className="field">
-                                    <span className="p-float-label p-input-icon-right">
-                                        
-                                        <InputText id="phoneNumber" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
-                                        <label htmlFor="phoneNumber" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Phone Number*</label>
-                                    </span>
-                                    {getFormErrorMessage(meta)}
-                                </div>
-                            )} />
+                            <div className="field">
+                                <span className="p-float-label p-input-icon-right">
+                                    <PhoneInput
+                                        inputProps={{
+                                            name: 'phoneNumber',
+                                            required: true, // Add any other input props you may need
+                                        }}
+                                        placeholder="Enter phone number"
+                                        {...input}
+                                        country={'PK'}
+                                    />
+                                    <label htmlFor="phoneNumber" className={classNames({ 'p-error': isFormFieldValid(meta) })}></label>
+                                </span>
+                                {getFormErrorMessage(meta)}
+                            </div>
+                        )} />
+
+
+    
                             <Field name="password" render={({ input, meta }) => (
                                 <div className="field">
                                     <span className="p-float-label">

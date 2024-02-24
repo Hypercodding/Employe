@@ -1,13 +1,53 @@
 const express = require('express');
 const router = express.Router();
-const Items = require('../models/Items');
+const Item = require('../models/Item');
 const Product = require('../models/Product');
 const { body, validationResult } = require('express-validator');
 const fetchuser = require('../middleware/fetchuser');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'default_secret';
+
+
+
+router.post('/', async (req, res) => {
+  try {
+    const { productName, items } = req.body;
+
+      // Validate if the items exist
+      const itemIds = items.map((item) => item.item);
+      const existingItems = await Item.find({ _id: { $in: itemIds } });
+  
+
+    if (existingItems.length !== itemIds.length) {
+      return res.status(400).json({ error: 'One or more items do not exist' });
+    }
+
+    // Create a new product
+    const newProduct = new Product({ productName, items });
+
+    // Save the product to the database
+    await newProduct.save();
+
+    res.status(201).json({ message: 'Product added successfully' });
+  } catch (error) {
+    console.error('Error adding product:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// GET /api/products
+router.get('/get', async (req, res) => {
+  try {
+    // Retrieve all products from the database and populate the item details
+    const products = await Product.find().populate('items.item', 'itemName');
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Error getting products:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // Route 1: Add product
 router.post(

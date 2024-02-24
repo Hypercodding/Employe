@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
+
 const PurchaseTable = () => {
   const [purchaseData, setPurchaseData] = useState([]);
 
@@ -33,6 +34,11 @@ const PurchaseTable = () => {
       </div>
     );
   };
+  
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   const handleDelete = async (data) => {
     const { _id } = data;
@@ -56,14 +62,16 @@ const PurchaseTable = () => {
 
   return (
     <div>
-      <h2>Purchase Records</h2>
+      <h2 style={{textAlign: 'center'}}>Purchase Records</h2>
       <DataTable value={purchaseData} responsive>
-        <Column field="itemName" header="Item Name" />
+      <Column field="itemDetails" header="Item Name" body={(rowData) => rowData.itemDetails.itemName } />
         <Column field="quantity" header="Quantity" />
         <Column field="amountPerPiece" header="Amount Per Piece" />
         <Column field="TotalAmount" header="Total Amount" />
         <Column field="vendorName" header="Vendor Name" />
         <Column field="bankName" header="Bank Name" />
+        <Column field="expiryDate" header="Expiry Date"   body={(rowData) => rowData.expiryDate != null ? formatDate(rowData.expiryDate) : ""} />
+        
         <Column
           body={(rowData) => (
             <img

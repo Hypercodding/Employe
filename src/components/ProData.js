@@ -92,9 +92,20 @@ function ProData({ ProData, loadData }) {
       <div>
         {/* <i className="pi pi-pencil mx-2" onClick={() => handleEdit(rowData)}></i>
         <i className="pi pi-trash mx-3" onClick={() => handleDelete(rowData)}></i> */}
-        <i className="pi pi-print" onClick={() => generateOutpass(rowData)}></i>
+        <i className="pi pi-shopping-cart" onClick={() => generateOutpass(rowData)}></i>
         {/* <Button label="Generate Outpass" onClick={() => generateOutpass(rowData)} /> */}
       </div>
+    );
+  };
+  const renderItems = (rowData) => {
+    return (
+      <ul>
+        {rowData.items.map((item, index) => (
+          <li key={index}>
+            {item.item.itemName} - Quantity: {item.quantity}
+          </li>
+        ))}
+      </ul>
     );
   };
 
@@ -112,9 +123,7 @@ function ProData({ ProData, loadData }) {
         paginatorRight={<CSVLink data={ProData} filename="employee_data.csv"><Button type="button" icon="pi pi-download" /></CSVLink>}
       >
         <Column field="productName" header="Product Name" />
-        <Column field="productQuantity" header="Quantity" />
-        <Column field="customer" header="Customer" />
-        <Column field="amount" header="Amount" />
+        <Column body={renderItems} header="Items" />
         <Column body={renderActions} header="Actions" />
       </DataTable>
     </div>

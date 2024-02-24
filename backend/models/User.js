@@ -19,7 +19,7 @@ const UserSchema = new Schema ({
         required: true 
     },
     phoneNumber: { 
-        type: Number, 
+        type: String, 
         required: true, 
         unique: true 
     }, 
@@ -41,7 +41,18 @@ const UserSchema = new Schema ({
     createdAt: {
         type: Date,
         default: Date.now  // Set the default value to the current date and time   
+    },
+    verificationCode: {
+        type: String,
     }
-})
+
+});
+
+
+// Static method to check if a user with the provided phone number exists
+UserSchema.statics.findByPhoneNumber = async function (phoneNumber) {
+    return this.findOne({ phoneNumber });
+};
+
 
 module.exports = mongoose.model("User", UserSchema);

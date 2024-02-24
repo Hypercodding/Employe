@@ -4,10 +4,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const purchaseSchema = new Schema({
-    itemName: {
-        type: String,
-        required: true
-    },
+    itemName: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Item', // Reference to the Item collection
+    
+      }],
     quantity: {
         type: Number,
         required: true
@@ -27,6 +28,10 @@ const purchaseSchema = new Schema({
     bankName: {
         type: String,
         required: true
+    },
+    expiryDate: {
+        type: Date,
+
     },
     receipt: {
         type: String  // You can store the file path or use a cloud storage link for the receipt
