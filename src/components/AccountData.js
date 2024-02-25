@@ -4,7 +4,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { CSVLink } from 'react-csv';
 import { useNavigate } from 'react-router-dom';
-// import AddLeave from './AddLeaves';
+import AddAccount from './AddAcount';
 
 function AccountData({ AccountData, loadData }) {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function AccountData({ AccountData, loadData }) {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const paginatorLeft = <Button type="button" icon="pi pi-plus" text onClick={refreshTable} />;
+  const paginatorLeft = <AddAccount loadData={loadData} />;
   const paginatorRight = (
     <div className="button-container"><CSVLink data={AccountData} filename="employee_data.csv">
       <Button type="button" icon="pi pi-download" />
@@ -45,7 +45,7 @@ function AccountData({ AccountData, loadData }) {
 
     const { _id} = data;
 
-    var response = await fetch(`http://localhost:3500/api/emp/deleteemp/${_id}`, {
+    var response = await fetch(`http://localhost:3500/api/account/deleteAccount/${_id}`, {
       method: 'DELETE',
     });
     loadData();
