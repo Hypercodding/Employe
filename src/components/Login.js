@@ -12,10 +12,16 @@ import 'react-phone-input-2/lib/style.css'
 
 
 export const Login = () => {
+    //toast
     const toast = useRef(null);
+    
+    // setting navigate
     let navigate = useNavigate();
+
+    //setting form state
     const [formData, setFormData] = useState({});
 
+    //validating data
     const validate = (data) => {
         let errors = {};
 
@@ -30,6 +36,7 @@ export const Login = () => {
         return errors;
     };
 
+    //submitting form
     const onSubmit = async (data, form) => {
         setFormData(data);
 
@@ -55,10 +62,7 @@ export const Login = () => {
             });
 
             sessionStorage.setItem('token', json.authData);
-            let decoded = jwtDecode(json.authData);
-            let username = decoded.user;
-            // console.log('username', username);
-
+            
             navigate('/home');
             form.restart();
         } else {

@@ -43,7 +43,7 @@ function AccountData({ AccountData, loadData }) {
   const handleDelete = async (data, form) => {
     setFormData(data);
 
-    const { _id, name, salary, gender, phone_number, employee_status, cnic, department, dob, date_of_hire, job_title } = data;
+    const { _id} = data;
 
     var response = await fetch(`http://localhost:3500/api/emp/deleteemp/${_id}`, {
       method: 'DELETE',
@@ -51,10 +51,6 @@ function AccountData({ AccountData, loadData }) {
     loadData();
   };
 
-  const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
-  const getFormErrorMessage = (meta) => {
-    return isFormFieldValid(meta) && <small className="p-error">{meta.error}</small>;
-  };
 
   const handleEdit = (rowData) => {
     setSelectedLeaves(rowData);

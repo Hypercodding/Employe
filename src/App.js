@@ -32,6 +32,7 @@ import ForgotPassword from './components/ForgetPassword';
 import ResetPassword from './components/ResetPassword';
 import AddProduct from './components/AddProduct';
 import Inventory from './components/Inventory';
+import ProData from './components/ProData';
 
 
 
@@ -80,6 +81,7 @@ function AppContent() {
           <Route element={<Leaves/>} path="/Leaves" exact />
           <Route element={<Loans/>} path="/Loan" exact />          
           <Route element={<OutProduct />} path="/outProduct" exact />
+          <Route element={<ProData />} path="/ProductData" exact />
           <Route element={<GenerateSalary/>} path="/generateSalary" exact />
           <Route element={<Account/>} path="/account" exact />
           <Route element={<PurchaseForm/>} path="/addPurchase" exact />

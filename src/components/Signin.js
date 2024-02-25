@@ -12,14 +12,18 @@ import { Dropdown } from 'primereact/dropdown';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
-// import { CountryService } from '../services/CountryService';
-// import './FormDemo.css';
 
 export const Signin = () => {
+    //naviagte 
     let navigate = useNavigate();
+    
+    //show message on submit
     const [showMessage, setShowMessage] = useState(false);
+    
+    //setting form
     const [formData, setFormData] = useState({});
 
+    //velidating data
     const validate = (data) => {
         let errors = {};
 
@@ -42,6 +46,7 @@ export const Signin = () => {
         return errors;
     };
 
+    // submitting form
     const onSubmit = async (data, form) => {
         setFormData(data);
         setShowMessage(true);
@@ -65,8 +70,7 @@ export const Signin = () => {
             // Reset the form
             form.restart();
             localStorage.setItem('token', json.authData);
-            // await submitForm();
-            // Optionally, redirect to another page after successful login
+        
             navigate('/signin')
         }
 
@@ -99,7 +103,7 @@ export const Signin = () => {
                     <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
                     <h5>Registration Successful!</h5>
                     <p style={{ lineHeight: 1.5, textIndent: '1rem' }}>
-                        Your account is registered under name <b>{formData.name}</b> ; it'll be valid next 30 days without activation. Please check <b>{formData.phoneNumber}</b> for activation instructions.
+                        Your account is registered under Phone Number <b>{formData.phoneNumber}</b>.
                     </p>
                 </div>
             </Dialog>
